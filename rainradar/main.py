@@ -1,0 +1,16 @@
+import time
+from display import WeatherDisplay
+disp = WeatherDisplay()
+disp.showRadarData([-10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 70, 60, 50, 40, 30, 20, 10, 0, 30, 40, 80, 20, 30, 50, 10])
+disp.showWaitTime(5)
+time.sleep(1)
+disp.showWaitTime(4)
+time.sleep(1)
+disp.showWaitTime(3)
+time.sleep(1)
+disp.showWaitTime(2)
+time.sleep(1)
+disp.showWaitTime(1)
+time.sleep(1)
+disp.showWaitTime(0)
+time.sleep(1)
