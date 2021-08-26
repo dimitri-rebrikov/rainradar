@@ -1,20 +1,19 @@
 import max7219
 from machine import Pin, SPI
-from micropython import const
 
-radar_max_dbz = 70
+radar_max_dbz = 65
 radar_min_dbz = 0
 radar_start_x = 0
 radar_start_y = 0
 radar_max_x = 29
 radar_max_y = 8
-radar_scale = (radar_max_dbz - radar_min_dbz) / (radar_max_y - radar_start_y)
+radar_scale = (radar_max_dbz - radar_min_dbz) / (radar_max_y - radar_start_y - 1)
 
 time_max = 5
 time_min = 0
 time_x = 31
-time_start_y = 0
-time_max_y = 8
+time_start_y = 1
+time_max_y = 6
 time_scale = (time_max - time_min) / (time_max_y - time_start_y)
 
 class WeatherDisplay:
@@ -38,9 +37,9 @@ class WeatherDisplay:
             # clean the radar area
             self.disp.fill_rect(radar_start_x, radar_start_y, radar_max_x - radar_start_x + 1, radar_max_y - radar_start_y + 1, 0)
             # iterate over dbZ values and show them as bars
-            for i in range(len(dbzList)):
+            for i in range(min(len(dbzList), radar_max_x - radar_start_x)):
                 value = max(radar_min_dbz, min(radar_max_dbz, dbzList[i]))
-                scaledValue = int(value / radar_scale)
+                scaledValue = int(value / radar_scale) + 1
                 self.disp.vline(radar_start_x + i, radar_max_y - scaledValue, scaledValue, 1)
             self.disp.show()
             
