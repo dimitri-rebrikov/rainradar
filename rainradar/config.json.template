@@ -1,0 +1,5 @@
+{
+"ssid":"the ssid of the WiFi",
+"password":"the password for the WiFi",
+"plz":"the postal index of place to provide the rain radar data for"
+}

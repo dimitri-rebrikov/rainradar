@@ -2,11 +2,14 @@ import time
 from display import WeatherDisplay
 from radar import Radar
 import wifi
+from config import Config
 
-wifi.connect('xxxxxx','xxxxxxx')
+cfg = Config()
+
+wifi.connect(cfg.getSsid(), cfg.getPassword())
 
 disp = WeatherDisplay()
-radar = Radar(90402)
+radar = Radar(cfg.getPlz())
 
 while True:
     radarData = radar.getData()

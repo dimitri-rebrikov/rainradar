@@ -1,6 +1,6 @@
 import network
 
-def connect(ssid, passowrd):
+def connect(ssid, password):
     sta_if = network.WLAN(network.STA_IF)
     if not sta_if.isconnected():
         print('connecting to network...')
