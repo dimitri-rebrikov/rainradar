@@ -11,6 +11,7 @@ def connect(ssid, password):
     while not sta_if.isconnected():
         tries = tries + 1
         if tries > 10:
+            print("no wifi connection after 10 sec")
             raise RainradarException("WFER")
         time.sleep(1)       
 

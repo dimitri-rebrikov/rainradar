@@ -7,13 +7,15 @@ class Config:
     def __init__(self):
         try:
             fp = open(filePath, 'r')
-        except:
+        except Exception as e:
+            print(repr(e))
             raise RainradarException("CFRD")
         else:
             with fp:
                 try:
                     self.config=ujson.load(fp)
-                except:
+                except Exception as e:
+                    print(repr(e))
                     raise RainradarException("CFJS")
     
     def writeConfig(self):

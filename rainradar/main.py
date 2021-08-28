@@ -4,6 +4,7 @@ from radar import Radar
 import wifi
 from config import Config
 from exception import RainradarException
+import rain
 
 while True:
     disp = WeatherDisplay()
@@ -14,9 +15,8 @@ while True:
         radar = Radar(cfg.getPlz())
 
         while True:
-            radarData = radar.getData()
-            disp.clean()
-            disp.showRadarData(radarData)
+            levelList = rain.mmListToLevelList(radar.getMmList())
+            disp.showRainLevels(levelList)
             for i in range(5, 0, -1):
                 for j in range(30):
                     disp.showWaitTime(i)

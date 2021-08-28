@@ -7,17 +7,19 @@ class Radar:
     def __init__(self, plz):
         self.url = url + str(plz)
 
-    def getData(self):
+    def getMmList(self):
         try:
             r = requests.get(self.url)
             try:
                 records = r.json()
-            except:
+            except Exception as e:
+                print(repr(e))
                 raise RainradarException("RDJS")
             r.close()
-        except:
+        except Exception as e:
+            print(repr(e))
             raise RainradarException("RDGT")
-        dbzList = []
+        mmList = []
         for record in records:
-            dbzList.append(int(float(record['dbz'])))
-        return dbzList
+            mmList.append(float(record['mm']))
+        return mmList
