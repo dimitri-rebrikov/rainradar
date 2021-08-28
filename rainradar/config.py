@@ -1,11 +1,20 @@
 import ujson
+from exception import RainradarException
 
 filePath="config.json"
 
 class Config:
     def __init__(self):
-        with open(filePath, 'r') as fp:
-            self.config=ujson.load(fp)
+        try:
+            fp = open(filePath, 'r')
+        except:
+            raise RainradarException("CFRD")
+        else:
+            with fp:
+                try:
+                    self.config=ujson.load(fp)
+                except:
+                    raise RainradarException("CFJS")
     
     def writeConfig(self):
         with open(filePath, 'w') as fp:

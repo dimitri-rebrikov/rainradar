@@ -59,3 +59,12 @@ class WeatherDisplay:
         scaledValue = int(value / time_scale)
         self.disp.vline(time_x, time_max_y - scaledValue, scaledValue, 1)
         self.disp.show()
+
+    def showText(self, text):
+        self.disp.fill(0)
+        self.disp.text(text, 0, 0)
+        self.disp.show()
+        
+    def clean(self):
+        self.disp.fill(0)
+        self.disp.show()

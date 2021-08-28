@@ -3,23 +3,27 @@ from display import WeatherDisplay
 from radar import Radar
 import wifi
 from config import Config
-
-cfg = Config()
-
-wifi.connect(cfg.getSsid(), cfg.getPassword())
-
-disp = WeatherDisplay()
-radar = Radar(cfg.getPlz())
+from exception import RainradarException
 
 while True:
-    radarData = radar.getData()
-    disp.showRadarData(radarData)
-    #disp.showRadarData([-10, 0, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 70, 60, 50, 40, 30, 20, 10, 0, 30, 40, 80, 20, 30, 50, 10, -10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 70, 60, 50, 40, 30, 20, 10, 0, 30, 40, 80, 20, 30, 50, 10])
+    disp = WeatherDisplay()
+    disp.showText("STRT")
+    try:
+        cfg = Config()
+        wifi.connect(cfg.getSsid(), cfg.getPassword())
+        radar = Radar(cfg.getPlz())
 
-    for i in range(5, 0, -1):
-        for j in range(30):
-            disp.showWaitTime(i)
-            time.sleep(1)
-            disp.showWaitTime(i-1)
-            time.sleep(1)
+        while True:
+            radarData = radar.getData()
+            disp.clean()
+            disp.showRadarData(radarData)
+            for i in range(5, 0, -1):
+                for j in range(30):
+                    disp.showWaitTime(i)
+                    time.sleep(1)
+                    disp.showWaitTime(i-1)
+                    time.sleep(1)
 
+    except RainradarException as exp:
+        disp.showText(str(exp))
+        time.sleep(5)

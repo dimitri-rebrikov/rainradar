@@ -1,4 +1,5 @@
 import urequests as requests
+from exception import RainradarException
 
 url='https://morgenwirdes.de/api/v2/rjson.php?plz='
 
@@ -7,9 +8,15 @@ class Radar:
         self.url = url + str(plz)
 
     def getData(self):
-        r = requests.get(self.url)
-        records = r.json()
-        r.close()
+        try:
+            r = requests.get(self.url)
+            try:
+                records = r.json()
+            except:
+                raise RainradarException("RDJS")
+            r.close()
+        except:
+            raise RainradarException("RDGT")
         dbzList = []
         for record in records:
             dbzList.append(int(float(record['dbz'])))
