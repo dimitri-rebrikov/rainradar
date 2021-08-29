@@ -1,5 +1,7 @@
 import max7219
 from machine import Pin, SPI
+import framebuf
+import time
 
 radar_start_x = 0
 radar_max_x = 29
@@ -8,7 +10,7 @@ time_x = 31
 
 max_y = 8
 
-class WeatherDisplay:
+class Display:
     def __init__(self):
         spi = SPI(1, baudrate=10000000, polarity=0, phase=0)
         self.disp = max7219.Matrix8x8(spi, Pin(15), 4)
@@ -38,14 +40,46 @@ class WeatherDisplay:
         self.disp.vline(time_x, max(8 - toWait, 0), toWait, 1)
         self.disp.show()
 
-    def showText(self, text):
+    def showText(self, text, duration):
         print("showText: " + text)
-        self.disp.fill(0)
-        self.disp.text(text, 0, 0)
-        self.disp.show()
+        if(len(text) > 4):
+            self._showLongText(text, duration)
+        else:
+            self.disp.fill(0)
+            self.disp.text(text, 0, 0)
+            self.disp.show()
+            self.needClean = True;
+            time.sleep(duration)
+        
+    def _showLongText(self, text, duration):
+        textLen = len(text)
+        textFb = framebuf.FrameBuffer(bytearray(8 * textLen), 8 * textLen, 8, framebuf.MONO_HLSB)
+        textFb.fill(0)
+        textFb.text(text, 0, 0)
+        scrollNum = (textLen - 4) * 8
+        for i in range(scrollNum):
+            self.disp.blit(textFb, 0, 0)
+            self.disp.show()
+            textFb.scroll(-1,0)
+            if i == 0 or i == scrollNum - 1:
+                time.sleep(duration)
+            else:
+                time.sleep(duration / 8)
         self.needClean = True;
         
     def clean(self):
         self.disp.fill(0)
         self.disp.show()
         self.needClean = False
+        
+    def test(self):
+        self.showText("ABCD", 2)
+        self.showText("01234567890", 2)
+        rainLevels=[0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, 0, 2, 4, 6, 4, 2, 0, 1, 3, 7, 4, 2, 1]
+        for i in range(len(rainLevels)):
+            self.showRainLevels(rainLevels)
+            time.sleep(1)
+            rainLevels.append(rainLevels.pop(0))
+        for i in range(9):
+            self.showWaitTime(i)
+            time.sleep(1)

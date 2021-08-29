@@ -9,14 +9,14 @@ class Config:
             fp = open(filePath, 'r')
         except Exception as e:
             print(repr(e))
-            raise RainradarException("CFRD")
+            raise RainradarException("MISSING CONF")
         else:
             with fp:
                 try:
                     self.config=ujson.load(fp)
                 except Exception as e:
                     print(repr(e))
-                    raise RainradarException("CFJS")
+                    raise RainradarException("WRONG CONF JSON")
     
     def writeConfig(self):
         with open(filePath, 'w') as fp:

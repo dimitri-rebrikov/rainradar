@@ -1,5 +1,5 @@
 import time
-from display import WeatherDisplay
+from display import Display
 from radar import Radar
 import wifi
 from config import Config
@@ -7,13 +7,13 @@ from exception import RainradarException
 import rain
 
 while True:
-    disp = WeatherDisplay()
-    disp.showText("STRT")
+    disp = Display()
     try:
         cfg = Config()
+        plz = cfg.getPlz()
+        disp.showText(plz, 2)
         wifi.connect(cfg.getSsid(), cfg.getPassword())
-        radar = Radar(cfg.getPlz())
-
+        radar = Radar(plz)
         while True:
             levelList = rain.mmListToLevelList(radar.getMmList())
             disp.showRainLevels(levelList)
@@ -25,5 +25,4 @@ while True:
                     time.sleep(1)
 
     except RainradarException as exp:
-        disp.showText(str(exp))
-        time.sleep(5)
+        disp.showText(str(exp), 2)

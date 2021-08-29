@@ -4,6 +4,7 @@ from exception import RainradarException
 
 def connect(ssid, password):
     sta_if = network.WLAN(network.STA_IF)
+    sta_if.active(False)
     print('connecting to network...')
     sta_if.active(True)
     sta_if.connect(ssid, password)
@@ -12,7 +13,7 @@ def connect(ssid, password):
         tries = tries + 1
         if tries > 10:
             print("no wifi connection after 10 sec")
-            raise RainradarException("WFER")
+            raise RainradarException("ERROR WIFI")
         time.sleep(1)       
 
     print('network config:', sta_if.ifconfig())
