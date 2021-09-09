@@ -12,8 +12,9 @@ max_y = 8
 
 class Display:
     def __init__(self):
-        spi = SPI(1, baudrate=10000000, polarity=0, phase=0)
-        self.disp = max7219.Matrix8x8(spi, Pin(15), 4)
+        spi = SPI(1, baudrate=10000000, polarity=0, phase=0, sck=Pin(4), mosi=Pin(2))
+        ss = Pin(5, Pin.OUT) 
+        self.disp = max7219.Matrix8x8(spi, ss, 4)
         self.disp.brightness(0)
         self.clean()
 
