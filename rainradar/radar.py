@@ -7,7 +7,7 @@ class Radar:
     def __init__(self, plz):
         self.url = url + str(plz)
 
-    def getMmList(self):
+    def getMmRecordList(self):
         try:
             r = requests.get(self.url)
             try:
@@ -19,7 +19,7 @@ class Radar:
         except Exception as e:
             print(repr(e))
             raise RainradarException("WEB CANNOT GET")
-        mmList = []
+        mmRecordList = []
         for record in records:
-            mmList.append(float(record['mm']))
-        return mmList
+            mmRecordList.append({'mm':float(record['mm']), 'timestamp':int(record['timestamp'])})
+        return mmRecordList

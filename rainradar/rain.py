@@ -16,9 +16,9 @@ def mmToLevel(mm):
     else:
         return 7 # very heavy rain
     
-def mmListToLevelList(mmList):
+def mmRecordListToLevelList(mmRecordList):
     levelList = []
-    for mm in mmList:
-        levelList.append(mmToLevel(mm))
+    for mmRecord in mmRecordList:
+        levelList.append(mmToLevel(mmRecord['mm']))
     return levelList
     
