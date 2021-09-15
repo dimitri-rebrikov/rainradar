@@ -4,6 +4,8 @@
 Rain Radar (German: Regenradar)  displays the rain forecast  on a 32x8 led matrix.
 It shows the intencity of the rain for the next 2 hours as LED bars one for every 5 minutes.
 
+Picture of the current hardware implementation:
+![picture](20210915_095354.jpg)
 
 # common
 The Rain Radar is a combination of:
