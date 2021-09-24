@@ -11,7 +11,7 @@ Picture of the current hardware implementation:
 The Rain Radar is a combination of:
 - a ESP32 microcontroller
 - a chain of 4 MAX7219 8x8 LED matrices
-- an online service providing the rain forecast in mm/h for a geographic coordinate
+- an online service providing the rain forecast in mm/h for geographic coordinates or postal index (https://morgenwirdes.de/api/)
 
 # setup
 (draft)
