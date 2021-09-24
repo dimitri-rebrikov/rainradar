@@ -4,7 +4,10 @@ import framebuf
 import time
 
 radar_start_x = 0
-radar_max_x = 29
+radar_max_x = 24
+
+forecast_start_x = 25
+forecast_max_x = 29
 
 time_x = 31
 
@@ -19,16 +22,22 @@ class Display:
         self.clean()
 
     def showRainLevels(self, levelList):
-        print("showRainLevels: " + repr(levelList))
+        self._showLevels(levelList, radar_start_x, radar_max_x)
+
+    def showForecastLevels(self, levelList):
+        self._showLevels(levelList, forecast_start_x, forecast_max_x)
+        
+    def _showLevels(self, levelList, start_x, max_x):
+        print("showLevels: start: " + str(start_x) + ", max: " + str(max_x) + ", levels: "+ repr(levelList))
         if self.needClean:
             self.clean()
         else:
-            # clean the radar area only
-            self.disp.fill_rect(radar_start_x, 0, radar_max_x - radar_start_x + 1, max_y, 0)
-        # iterate over dbZ values and show them as bars
-        for i in range(min(len(levelList), radar_max_x - radar_start_x)):
-            level = levelList[i] + 1 # display no rain a bar with one element
-            self.disp.vline(radar_start_x + i, max(max_y - level, 0), level, 1)
+            # clean the required area only
+            self.disp.fill_rect(start_x, 0, max_x - start_x + 1, max_y, 0)
+        # iterate over values and show them as bars
+        for i in range(min(len(levelList), max_x - start_x)):
+            level = levelList[i] + 1 # display zero level as a bar with one element
+            self.disp.vline(start_x + i, max(max_y - level, 0), level, 1)
         self.disp.show()
         
     def showWaitTime(self, toWait):

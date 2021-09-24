@@ -14,11 +14,11 @@ class Radar:
                 records = r.json()
             except Exception as e:
                 print(repr(e))
-                raise RainradarException("WRONG JSON WEB")
+                raise RainradarException("WRONG JSON RADAR")
             r.close()
         except Exception as e:
             print(repr(e))
-            raise RainradarException("WEB CANNOT GET")
+            raise RainradarException("WEB CANNOT RADAR")
         mmRecordList = []
         for record in records:
             mmRecordList.append({'mm':float(record['mm']), 'timestamp':int(record['timestamp'])})
