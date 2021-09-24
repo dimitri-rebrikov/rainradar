@@ -62,8 +62,5 @@ class Forecast:
                     'timestamp':timestamp,
                     'level': elem['level'] if elem['probability'] >= 50 else 0
                 })
-        print("forecast levels: " + repr(levels))
+        #print("forecast levels: " + repr(levels))
         return levels
-            
-            
-

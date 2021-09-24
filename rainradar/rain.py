@@ -21,4 +21,3 @@ def mmRecordListToLevelList(mmRecordList):
     for mmRecord in mmRecordList:
         levelList.append(mmToLevel(mmRecord['mm']))
     return levelList
-    

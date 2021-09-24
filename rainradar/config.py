@@ -39,4 +39,3 @@ class Config:
     
     def setPlz(self, plz):
         self.config['plz'] = plz
-    

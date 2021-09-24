@@ -65,8 +65,7 @@ def setNextForecastSyncTime(forecastList):
         nextForecastSyncTime = time.time() + ( 60 * 60 )
     else:
         nextForecastSyncTime = unix2EmbTime(forecastList[0]['timestamp']) - (60 * 60 * 3) + 20     
-
-            
+   
 def showPause():
     while(nextRadarSyncTime > time.time()):
         minutesToWait = math.ceil( (nextRadarSyncTime - time.time()) / 60 )
@@ -95,4 +94,3 @@ while True:
 
     except RainradarException as exp:
         disp.showText(str(exp), 2)
-
