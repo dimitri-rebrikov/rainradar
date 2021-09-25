@@ -10,13 +10,7 @@ import rain
 from forecast import Forecast
 
 syncTimePeriod = 60*60 # 1 hour
-lastSyncTime = 0
-
-embUnixTimeDiff = 946684800
-
-nextRadarSyncTime = 0
-
-nextForecastSyncTime = 0
+embUnixTimeDiff = 946684800 # embedded systems use 01-01-2000 as start of the time in compare to the unix' 01-01-1970
 
 def syncTime():
     global syncTimePeriod, lastSyncTime
@@ -77,6 +71,9 @@ def showPause():
 # main loop
 while True:
     disp = Display()
+    lastSyncTime = 0
+    nextRadarSyncTime = 0
+    nextForecastSyncTime = 0
     try:
         cfg = Config()
         plz = cfg.getPlz()
@@ -93,4 +90,4 @@ while True:
             showPause()
 
     except RainradarException as exp:
-        disp.showText(str(exp), 2)
+        disp.showText(str(exp), 3)
