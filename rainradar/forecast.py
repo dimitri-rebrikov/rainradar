@@ -27,11 +27,11 @@ class Forecast:
                 records = r.json()['data']
             except Exception as e:
                 print(repr(e))
-                raise RainradarException("WRONG JSON FORECAST")
+                raise RainradarException("ERR JSON FORECAST")
             r.close()
         except Exception as e:
             print(repr(e))
-            raise RainradarException("WEB CANNOT GET FORECAST")
+            raise RainradarException("ERR GET FORECAST")
         forecastList = []
         max = 24
         cnt = 0

@@ -13,7 +13,7 @@ def connect(ssid, password):
         tries = tries + 1
         if tries > 10:
             print("no wifi connection after 10 sec")
-            raise RainradarException("ERROR WIFI")
+            raise RainradarException("ERR WIFI")
         time.sleep(1)       
 
     print('network config:', sta_if.ifconfig())
