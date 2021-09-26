@@ -7,7 +7,7 @@ from exception import RainradarException
 import ntptime
 import math
 import rain
-from forecast import Forecast
+from weather import Weather
 
 syncTimePeriod = 60*60 # 1 hour
 embUnixTimeDiff = 946684800 # embedded systems use 01-01-2000 as start of the time in compare to the unix' 01-01-1970
@@ -25,19 +25,17 @@ def emb2UnixTime(embTime):
 def unix2EmbTime(unixTime):
     return unixTime - embUnixTimeDiff
         
-def updateRainLevels():
+def updateRainRadarLevels():
     mmRecordList = removePastRecords(radar.getMmRecordList(), 0)
-    print("rain records: " + repr(mmRecordList))
+    print("rain radar records: " + repr(mmRecordList))
     levelList = rain.mmRecordListToLevelList(mmRecordList)
     disp.showRainLevels(levelList)
     setNextRadarSyncTime(mmRecordList)
     
-def updateForecastLevels():
-    forecastList = removePastRecords(forecast.getRainLevels(), 60 * 60 * 3)
-    print("forecast records: " + repr(forecastList))
-    levelList = []
-    for rec in forecastList:
-        levelList.append(rec['level'])
+def updateRainForecastLevels():
+    forecastList = removePastRecords(weather.getRainHourlyForecast(), 60 * 60 * 2)
+    print("rain forecast records: " + repr(forecastList))
+    levelList = rain.mmRecordListToLevelList(forecastList)
     disp.showForecastLevels(levelList)
     setNextForecastSyncTime(forecastList)
     
@@ -80,13 +78,13 @@ while True:
         disp.showText(plz, 2)
         wifi.connect(cfg.getSsid(), cfg.getPassword())
         radar = Radar(plz)
-        forecast = Forecast(plz)
+        weather = Weather(plz)
         while True:
             syncTime()
-            updateRainLevels()
+            updateRainRadarLevels()
             print("nextForecastSyncTime:"+str(emb2UnixTime(nextForecastSyncTime))+", time:"+str(emb2UnixTime(time.time())))
             if nextForecastSyncTime <= time.time():
-                updateForecastLevels()
+                updateRainForecastLevels()
             showPause()
 
     except RainradarException as exp:
