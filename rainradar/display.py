@@ -7,10 +7,9 @@ radar_start_x = 0
 radar_max_x = 24
 
 forecast_start_x = 25
-forecast_max_x = 31
+forecast_max_x = 30
 
-info_led_x = 31
-info_led_y = 7
+time_x = 31
 
 max_y = 8
 
@@ -41,8 +40,15 @@ class Display:
             self.disp.vline(start_x + i, max(max_y - level, 0), level, 1)
         self.disp.show()
         
-    def infoLed(self, value):
-        self.disp.pixel(info_led_x, info_led_y, value)
+    def showWaitTime(self, toWait):
+        if self.needClean:
+            self.clean()
+        else:
+            # clean the time bar
+            self.disp.vline(time_x, 0, 8, 0)
+        if toWait != 0:
+            # show the time dot
+            self.disp.pixel(time_x, min(max(toWait - 1, 0), 7), 1)
         self.disp.show()
 
     def showText(self, text, duration):
