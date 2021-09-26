@@ -7,9 +7,10 @@ radar_start_x = 0
 radar_max_x = 24
 
 forecast_start_x = 25
-forecast_max_x = 29
+forecast_max_x = 31
 
-time_x = 31
+info_led_x = 31
+info_led_y = 7
 
 max_y = 8
 
@@ -35,19 +36,13 @@ class Display:
             # clean the required area only
             self.disp.fill_rect(start_x, 0, max_x - start_x + 1, max_y, 0)
         # iterate over values and show them as bars
-        for i in range(min(len(levelList), max_x - start_x)):
+        for i in range(min(len(levelList), max_x - start_x + 1)):
             level = levelList[i] + 1 # display zero level as a bar with one element
             self.disp.vline(start_x + i, max(max_y - level, 0), level, 1)
         self.disp.show()
         
-    def showWaitTime(self, toWait):
-        if self.needClean:
-            self.clean()
-        else:
-            # clean the time bar
-            self.disp.vline(time_x, 0, 8, 0)
-        # show the time bar
-        self.disp.vline(time_x, max(8 - toWait, 0), toWait, 1)
+    def infoLed(self, value):
+        self.disp.pixel(info_led_x, info_led_y, value)
         self.disp.show()
 
     def showText(self, text, duration):

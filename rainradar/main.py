@@ -61,10 +61,13 @@ def setNextForecastSyncTime(forecastList):
 def showPause():
     while(nextRadarSyncTime > time.time()):
         minutesToWait = math.ceil( (nextRadarSyncTime - time.time()) / 60 )
-        disp.showWaitTime(minutesToWait)
-        time.sleep(1)
-        disp.showWaitTime(minutesToWait-1)
-        time.sleep(1)
+        print("minutes to wait: " + str(minutesToWait))
+        for i in range(0, minutesToWait):
+            disp.infoLed(0)
+            time.sleep(0.5)
+            disp.infoLed(1)
+            time.sleep(0.5)
+        time.sleep(minutesToWait/2 + 1)
     
 # main loop
 while True:
