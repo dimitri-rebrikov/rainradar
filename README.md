@@ -5,7 +5,7 @@ Rain Radar (German: Regenradar)  displays the rain forecast  on a 32x8 led matri
 It shows the intencity of the rain for the next 2 hours as LED bars one for every 5 minutes.
 
 Picture of the current hardware implementation:
-![picture](20210915_095354.jpg)
+![picture](doc/picture.jpg)
 
 # common
 The Rain Radar is a combination of:
@@ -15,7 +15,7 @@ The Rain Radar is a combination of:
 
 # setup
 (draft)
-- connect ESP32 and MAX7219 according to https://github.com/mcauser/micropython-max7219
+- connect ESP32 to MAX7219 according to https://github.com/mcauser/micropython-max7219
 - install Python on the PC
 - flash the MicroPython image to the ESP32 as described in https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
   - pip install esptool
@@ -29,4 +29,7 @@ The Rain Radar is a combination of:
   - ampy --port COM4 mkdir lib
   - ampy --port COM4 put ~/Downloads/esp32/micropython/max7219.py lib/max7219.py
   - ampy --port COM4 ls lib
+- create config.json file in the ./rainradar folder base on the tmplate
+- copy the files from the ./rainradar folder into the root of the ESP32
+- restart ESP32
 
