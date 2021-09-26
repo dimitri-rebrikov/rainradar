@@ -43,7 +43,7 @@ The Rain Radar is a combination of:
   - 19 x 40 (2 pices) for the sides of the lid
 - 4 x brass standoffs m2.5 12 mm height for the ESP32
 - 4 x brass standoffs m2.5 6 mm height for the matrix module
-- 4 x mounting blocks m2.5 (buerklin.com 17H9204) for the lid
+- 4 x mounting blocks m2.5 [buerklin 17H9204](https://www.buerklin.com/en/Mounting-element/p/17H9204) for the lid
 - Screws/nuts m2.5
 ## Blueprints
 - [Drilling plan for the U profile](doc/case_drillings). It can be opened in [OpenScad](https://openscad.org/) and the exported as [DXF file](https://en.wikipedia.org/wiki/AutoCAD_DXF) for measures and processing.
