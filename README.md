@@ -5,7 +5,7 @@ Rain Radar (German: Regenradar)  displays the rain forecast  on a 32x8 led matri
 It shows the intencity of the rain for the next 2 hours as LED bars one for every 5 minutes.
 
 Picture of the current hardware implementation:
-![picture](doc/picture.jpg)
+![picture](doc/rainradar.jpg)
 
 # common
 The Rain Radar is a combination of:
@@ -33,3 +33,25 @@ The Rain Radar is a combination of:
 - copy the files from the ./rainradar folder into the root of the ESP32
 - restart ESP32
 
+# assembly
+## Bill of material
+- ESP32 dev board whith mounting holes
+- Dot matrix module 4 8x8 with MAX7219 controller
+- Aluminium U profile 23.5 x 43.5 mm (inside dimensions 20 x 40) cut to the length of 205 mm
+- Acrylic glass plate, red transparent, cut to the pieces 
+  - 40 x 205 for the top of the lid
+  - 19 x 40 (2 pices) for the sides of the lid
+- 4 x brass standoffs m2.5 12 mm height for the ESP32
+- 4 x brass standoffs m2.5 6 mm height for the matrix module
+- 4 x mounting blocks m2.5 (buerklin.com 17H9204) for the lid
+- Screws/nuts m2.5
+## Blueprints
+- [Drilling plan for the U profile](doc/case_drillings). It can be opened in [OpenScad](https://openscad.org/) and the exported as [DXF file](https://en.wikipedia.org/wiki/AutoCAD_DXF) for measures and processing.
+## Pictures of the assembly
+![picture](doc/assembly_01.jpg)
+![picture](doc/assembly_02.jpg)
+![picture](doc/assembly_03.jpg)
+![picture](doc/assembly_04.jpg)
+![picture](doc/assembly_05.jpg)
+![picture](doc/assembly_06.jpg)
+![picture](doc/assembly_07.jpg)
