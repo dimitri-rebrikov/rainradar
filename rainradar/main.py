@@ -15,7 +15,11 @@ embUnixTimeDiff = 946684800 # embedded systems use 01-01-2000 as start of the ti
 def syncTime():
     global syncTimePeriod, lastSyncTime
     if lastSyncTime == 0 or lastSyncTime < time.time() - syncTimePeriod:
-        ntptime.settime()
+        try:
+            ntptime.settime()
+        except Exception as e:
+            print(repr(e))
+            raise RainradarException("ERR NTP")
         print("Synced time to: " + str(time.time()) + ", unix:" + str(emb2UnixTime(time.time())) + ", " + str(time.gmtime()))
         lastSyncTime = time.time()
         
