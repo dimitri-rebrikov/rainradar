@@ -51,10 +51,10 @@ class Display:
             self.disp.pixel(time_x, min(max(toWait - 1, 0), 7), 1)
         self.disp.show()
 
-    def showText(self, text, duration):
+    def showText(self, text, duration=0):
         print("showText: " + text)
         if(len(text) > 4):
-            self._showLongText(text, duration)
+            self._showLongText(text, 1 if duration == 0 else duration)
         else:
             self.disp.fill(0)
             self.disp.text(text, 0, 0)

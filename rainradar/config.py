@@ -1,26 +1,34 @@
-import ujson
+try:
+  import ujson as json
+except:
+  import json
+
 from exception import RainradarException
 
 filePath="config.json"
 
 class Config:
     def __init__(self):
+        self.readConfig()
+        
+    def readConfig(self):
         try:
             fp = open(filePath, 'r')
         except Exception as e:
             print(repr(e))
-            raise RainradarException("NO CONF")
+            #raise RainradarException("ERR FILE CONF")
         else:
             with fp:
                 try:
-                    self.config=ujson.load(fp)
+                    self.config=json.load(fp)
                 except Exception as e:
                     print(repr(e))
                     raise RainradarException("ERR CONF")
     
     def writeConfig(self):
         with open(filePath, 'w') as fp:
-            return ujson.dump(self.config, fp)
+            print("Write config: " + json.dumps(self.config))
+            return json.dump(self.config, fp)
         
     def getSsid(self):
         return self.config['ssid']

@@ -2,18 +2,49 @@ import network
 import time
 from exception import RainradarException
 
-def connect(ssid, password):
-    sta_if = network.WLAN(network.STA_IF)
-    sta_if.active(False)
+sta_if = network.WLAN(network.STA_IF)
+ap_if = network.WLAN(network.AP_IF)
+
+def connect(ssid, password, wait=True):
     print('connecting to network...')
     sta_if.active(True)
+    sta_if.disconnect()
     sta_if.connect(ssid, password)
     tries = 0
-    while not sta_if.isconnected():
-        tries = tries + 1
-        if tries > 10:
-            print("no wifi connection after 10 sec")
-            raise RainradarException("ERR WIFI")
-        time.sleep(1)       
-
+    if wait:
+        while not sta_if.isconnected():
+            tries = tries + 1
+            if tries > 10:
+                print("no wifi connection after 10 sec")
+                raise RainradarException("ERR WIFI")
+            time.sleep(1)       
+    else:
+        print("connected: " + str(sta_if.isconnected()))
     print('network config:', sta_if.ifconfig())
+    
+def disconnect():
+    sta_if.disconnect()
+    
+def isConnected():
+    return sta_if.isconnected()
+
+def listNetworks():
+    sta_if.active(True)
+    networks = sta_if.scan()
+    nameList = set()
+    for network in networks:
+        name = network[0].decode('utf-8')
+        if len(name) != 0:
+            nameList.add(name)
+    return sorted(nameList)
+    
+def startAccessPoint():
+    print('start access point')
+    ap_if.active(True)
+    ap_if.config(essid="rainradar", password="rainradar2021", authmode=3)
+    while not ap_if.active():
+        pass
+    
+def stopAccessPoint():
+    print('stop access point')
+    ap_if.active(False)
