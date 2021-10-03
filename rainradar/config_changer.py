@@ -100,11 +100,13 @@ class ConfigChanger:
         return html
 
     def __updateConfigFromRequest(self, request):
+        containsQueryParameters = False
         changed = False
         testConnection = False
         print(request)
         split1 = request.split('\n')[0].split(' ')[1].split('?')
         if len(split1) > 1:
+            containsQueryParameters = True
             for paramValue in split1[1].split('&'):
                 if '=' in paramValue:
                     param, value = paramValue.split('=')
@@ -130,6 +132,7 @@ class ConfigChanger:
             self.config.writeConfig()
         if testConnection:
             self.__testWifiConnection()
+        return containsQueryParameters
 
 
     def __testWifiConnection(self):
@@ -151,13 +154,16 @@ class ConfigChanger:
                 conn, addr = s.accept()
                 conn.settimeout(3.0)
                 print('Got a connection from %s' % str(addr))
-                request = conn.recv(1024)
+                request = str(conn.recv(1024))
                 conn.settimeout(None)
-                self.__updateConfigFromRequest(str(request))
-                conn.send('HTTP/1.1 200 OK\n'.encode())
-                conn.send('Content-Type: text/html\n'.encode())
-                conn.send('Connection: close\n\n'.encode())
-                conn.sendall(self.__getResponse().encode())
+                if self.__updateConfigFromRequest(request):
+                    conn.send('HTTP/1.1 303 See Other\n')
+                    conn.send('Location: ./\n')
+                else:
+                    conn.send('HTTP/1.1 200 OK\n'.encode())
+                    conn.send('Content-Type: text/html\n'.encode())
+                    conn.send('Connection: close\n\n'.encode())
+                    conn.sendall(self.__getResponse().encode())
                 conn.close()
             except OSError as e:
                 conn.close()
