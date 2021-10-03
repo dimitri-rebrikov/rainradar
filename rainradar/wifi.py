@@ -30,13 +30,13 @@ def isConnected():
 
 def listNetworks():
     sta_if.active(True)
-    networks = sta_if.scan()
-    nameList = set()
+    networks = sorted(sta_if.scan(), key=lambda entry: entry[3], reverse=True) # pos 3 is the signal strength
+    nameList = []
     for network in networks:
         name = network[0].decode('utf-8')
-        if len(name) != 0:
-            nameList.add(name)
-    return sorted(nameList)
+        if len(name) != 0 and not name in nameList :
+            nameList.append(name)
+    return nameList
     
 def startAccessPoint():
     print('start access point')
