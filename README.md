@@ -46,7 +46,7 @@ The Rain Radar is a combination of:
 - 4 x mounting blocks m2.5 [buerklin 17H9204](https://www.buerklin.com/en/Mounting-element/p/17H9204) for the lid
 - Screws/nuts m2.5
 ## Blueprints
-- [Drilling plan for the U profile](doc/case_drillings). It can be opened in [OpenScad](https://openscad.org/) and the exported as [DXF file](https://en.wikipedia.org/wiki/AutoCAD_DXF) for measures and processing.
+- [Drilling plan for the U profile](doc/case_drillings.scad). It can be opened in [OpenScad](https://openscad.org/) and the exported as [DXF file](https://en.wikipedia.org/wiki/AutoCAD_DXF) for measures and processing.
 ## Pictures of the assembly
 ![picture](doc/assembly_01.jpg)
 ![picture](doc/assembly_02.jpg)
