@@ -26,7 +26,9 @@ class ConfigChanger:
             return self.__getConfigPage()
         
     def __isTestingConnection(self):
-        self.connectionSuccessful = wifi.isConnected()
+        if not self.connectionSuccessful:
+            self.connectionSuccessful = wifi.isConnected()
+        
         if  time.time() > self.waitForConnection or self.connectionSuccessful:
             wifi.disconnect()
             return False
@@ -149,6 +151,7 @@ class ConfigChanger:
 
 
     def __testWifiConnection(self):
+        self.connectionSuccessful = False
         wifi.connect(self.config.getSsid(), self.config.getPassword(), wait=False)
         self.waitForConnection = time.time() + waitForConnectionTimeout
 
