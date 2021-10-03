@@ -69,9 +69,9 @@ class ConfigChanger:
   <html>
   <body>
 
-  <h1>Rainradar</h1>
+  <h1>Rainradar Configuration Page</h1>
 
-  <h2>Status</h2>
+  <h2>WiFi Status</h2>
 
   <p>WiFi: ''' + {True: '<span style="color:green;">Connected</span>',
                False: '<span style="color:red;">Not connected</span>'}[self.connectionSuccessful] + '''
@@ -80,20 +80,28 @@ class ConfigChanger:
   <p>
   <form action="/">
      <input type="hidden" id="retest" name="retest" value="">
-     <input type="submit" value="Retest">
+     <input type="submit" value="Retest WiFi Connection">
   </form>
   </p>
   
-  <h2>Config</h2>
+  <h2>Change Parameters</h2>
   <p>
   <form action="/">
-    <label for="fname">WiFi Name (SSID):</label><br>
-    <input type="text" id="ssid" name="ssid" value="''' + self.config.getSsid() + '''"><br>
-    <label for="fname">WiFi Password (SSID):</label><br>
-    <input type="text" id="password" name="password" value="''' + self.config.getPassword() + '''"><br>
-    <label for="fname">Postal Index:</label><br>
-    <input type="text" id="plz" name="plz" value="''' + self.config.getPlz() + '''"><br>
+    <p>
+    <label for="fname">WiFi Name (SSID):</label>
+    <input type="text" id="ssid" name="ssid" value="''' + self.config.getSsid() + '''">
+    </p>
+    <p>
+    <label for="fname">WiFi Password:</label>
+    <input type="text" id="password" name="password" value="''' + self.config.getPassword() + '''">
+    </p>
+    <p>
+    <label for="fname">Postal Index:</label>
+    <input type="text" id="plz" name="plz" value="''' + self.config.getPlz() + '''">
+    </p>
+    <p>
     <input type="submit" value="Save changes">
+    </p>
   </form> 
   </p>
   
@@ -101,6 +109,14 @@ class ConfigChanger:
   <p>
   ''' + '<br>'.join(wifi.listNetworks()) + '''
   </p>
+  
+  <p>
+  <form action="/">
+     <input type="submit" value="Refresh">
+  </form>
+  </p>
+
+  <h2>End</h2>
 
   <p>
   <form action="/">
