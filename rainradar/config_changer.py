@@ -71,13 +71,19 @@ class ConfigChanger:
 
   <h2>Status</h2>
 
-  WiFi: ''' + {True: '<span style="color:green;">Connected</span>',
+  <p>WiFi: ''' + {True: '<span style="color:green;">Connected</span>',
                False: '<span style="color:red;">Not connected</span>'}[self.connectionSuccessful] + '''
+  </p>
 
-  <a href="./?retest">retest</a> 
-
+  <p>
+  <form action="/">
+     <input type="hidden" id="retest" name="retest" value="">
+     <input type="submit" value="Retest">
+  </form>
+  </p>
+  
   <h2>Config</h2>
-
+  <p>
   <form action="/">
     <label for="fname">WiFi Name (SSID):</label><br>
     <input type="text" id="ssid" name="ssid" value="''' + self.config.getSsid() + '''"><br>
@@ -85,14 +91,21 @@ class ConfigChanger:
     <input type="text" id="password" name="password" value="''' + self.config.getPassword() + '''"><br>
     <label for="fname">Postal Index:</label><br>
     <input type="text" id="plz" name="plz" value="''' + self.config.getPlz() + '''"><br>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Save changes">
   </form> 
-
+  </p>
+  
   <h2>Available WiFi's</h2>
-
+  <p>
   ''' + '<br>'.join(wifi.listNetworks()) + '''
+  </p>
 
-  <a href="./?finish">finish</a> 
+  <p>
+  <form action="/">
+     <input type="hidden" id="finish" name="finish" value="">
+     <input type="submit" value="Exit Config">
+  </form>
+  </p>
 
   </body>
   </html>
