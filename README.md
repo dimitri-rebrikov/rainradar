@@ -13,6 +13,10 @@ The Rain Radar is a combination of:
 - a chain of four MAX7219 8x8 LED matrices
 - an online service providing the rain radar in mm/h and weather forecast for geographic coordinates or postal index (https://morgenwirdes.de/api/) in Germany.
 
+# manual
+
+See the [User Manual](doc/manual/MANUAL.md)
+
 # setup
 (draft)
 - connect ESP32 to MAX7219 according to https://github.com/mcauser/micropython-max7219
@@ -29,7 +33,8 @@ The Rain Radar is a combination of:
   - ampy --port COM4 mkdir lib
   - ampy --port COM4 put ~/Downloads/esp32/micropython/max7219.py lib/max7219.py
   - ampy --port COM4 ls lib
-- create config.json file in the ./rainradar folder base on the tmplate
+- upload the rainradar code to the ESP32
+  - ampy --port COM4 put ~/Downloads/rainradar/rainradar/*.py .
 - copy the files from the ./rainradar folder into the root of the ESP32
 - restart ESP32
 
