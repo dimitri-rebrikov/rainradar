@@ -1,12 +1,12 @@
 # Manual for the Rainradar
 
-## Controls and Connections
+## Controls and Connectors
 
 ![](controls.jpg)
 
 1. Display
 2. Power LED
-3. Configuration Button
+3. Configuration Mode Button
 4. Micro USB Socket 
 
 ## Operational Mode
