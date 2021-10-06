@@ -102,7 +102,7 @@ You shall connect to this Access Point:
 
 After successful connection you might get warning that there is no connection ot internet. This is ok, as now you connected exclusively only to the Rainradar.
 
-Now open the Address [http://192.168.41.1](http://192.168.41.1) in the Web Browser and the Configuration Page shall be displayed
+Now open the Address [http://192.168.4.1](http://192.168.4.1) in the Web Browser and the Configuration Page shall be displayed
 
 ### Configuration Page 
 
