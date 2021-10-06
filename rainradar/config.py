@@ -9,21 +9,25 @@ filePath="config.json"
 
 class Config:
     def __init__(self):
-        self.readConfig()
+        self.config = {
+            'ssid':'change_me',
+            'password':'change_me',
+            'plz':'change_me'
+            }
         
     def readConfig(self):
         try:
             fp = open(filePath, 'r')
         except Exception as e:
             print(repr(e))
-            #raise RainradarException("ERR FILE CONF")
+            raise RainradarException("ERR CONF FILE")
         else:
             with fp:
                 try:
                     self.config=json.load(fp)
                 except Exception as e:
                     print(repr(e))
-                    raise RainradarException("ERR CONF")
+                    raise RainradarException("ERR CONF JSON")
     
     def writeConfig(self):
         with open(filePath, 'w') as fp:

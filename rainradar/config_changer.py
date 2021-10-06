@@ -135,34 +135,35 @@ class ConfigChanger:
         changed = False
         testConnection = False
         print(request)
-        split1 = request.split('\n')[0].split(' ')[1].split('?')
-        if len(split1) > 1:
-            containsQueryParameters = True
-            for paramValue in split1[1].split('&'):
-                if '=' in paramValue:
-                    param, value = paramValue.split('=')
-                else:
-                    param = paramValue
-                    value = ''
-                if param == 'ssid' and value != self.config.getSsid():
-                    self.config.setSsid(value)
-                    changed = True
-                    testConnection = True
-                elif param == 'password' and value != self.config.getPassword():
-                    self.config.setPassword(value)
-                    changed = True
-                    testConnection = True
-                elif param == 'plz' and value != self.config.getPlz():
-                    self.config.setPlz(value)
-                    changed = True
-                elif param == 'retest':
-                    testConnection = True
-                elif param == 'finish':
-                    self.finished = True
-        if changed:
-            self.config.writeConfig()
-        if testConnection:
-            self.__testWifiConnection()
+        if 'GET' in request:
+            split1 = request.split('\n')[0].split(' ')[1].split('?')
+            if len(split1) > 1:
+                containsQueryParameters = True
+                for paramValue in split1[1].split('&'):
+                    if '=' in paramValue:
+                        param, value = paramValue.split('=')
+                    else:
+                        param = paramValue
+                        value = ''
+                    if param == 'ssid' and value != self.config.getSsid():
+                        self.config.setSsid(value)
+                        changed = True
+                        testConnection = True
+                    elif param == 'password' and value != self.config.getPassword():
+                        self.config.setPassword(value)
+                        changed = True
+                        testConnection = True
+                    elif param == 'plz' and value != self.config.getPlz():
+                        self.config.setPlz(value)
+                        changed = True
+                    elif param == 'retest':
+                        testConnection = True
+                    elif param == 'finish':
+                        self.finished = True
+            if changed:
+                self.config.writeConfig()
+            if testConnection:
+                self.__testWifiConnection()
         return containsQueryParameters
 
 

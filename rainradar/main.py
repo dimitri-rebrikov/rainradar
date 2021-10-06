@@ -104,6 +104,7 @@ while True:
         cfg = Config()
         configChanger = ConfigChanger(cfg, disp)
         checkConfigMode()
+        cfg.readConfig()
         plz = cfg.getPlz()
         disp.showText(plz, 2)
         checkConfigMode()
@@ -121,4 +122,9 @@ while True:
             showPause()
 
     except RainradarException as exp:
-        disp.showText(str(exp), 3)
+        strExp = str(exp)
+        print("RainradarException: " + strExp)
+        if 'ERR CONF' in strExp:
+            configMode = 1
+        else:
+            disp.showText(str(exp), 3)
