@@ -53,10 +53,10 @@ See the [User Manual](doc/manual/MANUAL.md)
 ## Blueprints
 - [Drilling plan for the U profile](doc/case_drillings.scad). It can be opened in [OpenScad](https://openscad.org/) and the exported as [DXF file](https://en.wikipedia.org/wiki/AutoCAD_DXF) for measures and processing.
 ## Pictures of the assembly
-![picture](doc/assembly_01.jpg)
-![picture](doc/assembly_02.jpg)
-![picture](doc/assembly_03.jpg)
-![picture](doc/assembly_04.jpg)
-![picture](doc/assembly_05.jpg)
-![picture](doc/assembly_06.jpg)
-![picture](doc/assembly_07.jpg)
+<img src="doc/assembly_01.jpg" height="300">
+<img src="doc/assembly_02.jpg" height="300">
+<img src="doc/assembly_03.jpg" height="300">
+<img src="doc/assembly_04.jpg" height="300">
+<img src="doc/assembly_05.jpg" height="300">
+<img src="doc/assembly_06.jpg" height="300">
+<img src="doc/assembly_07.jpg" height="300">
