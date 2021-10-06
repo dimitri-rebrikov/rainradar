@@ -18,7 +18,7 @@ The Rain Radar is a combination of:
 See the [User Manual](doc/manual/MANUAL.md)
 
 # setup
-(draft)
+
 - connect ESP32 to MAX7219 according to https://github.com/mcauser/micropython-max7219
 - install Python on the PC
 - flash the MicroPython image to the ESP32 as described in https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
@@ -33,9 +33,10 @@ See the [User Manual](doc/manual/MANUAL.md)
   - ampy --port COM4 mkdir lib
   - ampy --port COM4 put ~/Downloads/esp32/micropython/max7219.py lib/max7219.py
   - ampy --port COM4 ls lib
-- upload the rainradar code to the ESP32
-  - ampy --port COM4 put ~/Downloads/rainradar/rainradar/*.py .
-- copy the files from the ./rainradar folder into the root of the ESP32
+- download the rainradar code from the ./rainradar directory of this project
+- upload the rainradar code (i.e. the python modules *.py) to the ESP32
+  - ampy --port COM4 put ~/Downloads/esp32/rainradar/rainradar/
+  - ampy --port COM4 ls
 - restart ESP32
 
 # assembly
