@@ -10,6 +10,7 @@ import rain
 from weather import Weather
 from config_changer import ConfigChanger
 import machine
+import urandom
 
 syncTimePeriod = 60*60 # 1 hour
 embUnixTimeDiff = 946684800 # embedded systems use 01-01-2000 as start of the time in compare to the unix' 01-01-1970
@@ -60,19 +61,22 @@ def removePastRecords(timestampRecordList, addFutureSeconds):
      #print("beforFilter: " + repr(timestampRecordList))
      return list(filter(lambda rec: rec['timestamp'] >= emb2UnixTime(time.time()+ addFutureSeconds), timestampRecordList))
     
+def getRandom(base):
+    return urandom.random() * base
+    
 def setNextRadarSyncTime(mmRecordList):
     global nextRadarSyncTime
     if len(mmRecordList) < 1:
-        nextRadarSyncTime = time.time() + ( 5 * 60 )
+        nextRadarSyncTime = time.time() + ( 5 * 60 ) + getRandom(10)
     else:
-        nextRadarSyncTime = unix2EmbTime(mmRecordList[0]['timestamp']) + 15
+        nextRadarSyncTime = unix2EmbTime(mmRecordList[0]['timestamp']) + 15 + getRandom(10)
         
 def setNextForecastSyncTime(forecastList):
     global nextForecastSyncTime
     if len(forecastList) < 1:
         nextForecastSyncTime = time.time() + ( 60 * 60 )
     else:
-        nextForecastSyncTime = unix2EmbTime(forecastList[0]['timestamp']) - (60 * 60 * 3) + 20     
+        nextForecastSyncTime = unix2EmbTime(forecastList[0]['timestamp']) - (60 * 60 * 3) + getRandom(20)
    
 def showPause():
     while(nextRadarSyncTime > time.time()):
