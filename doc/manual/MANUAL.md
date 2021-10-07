@@ -11,6 +11,8 @@
 
 ## Operational Mode
 
+**For the initial configuration see:** [Configuration Mode](#configuration-mode)
+
 In this mode the Rainradar displays the short term rain forecast in the left part of the display and middle term rain forecast in the right part.
 
 The short term forecast shows the rain levels for the coming 2 hours with the resolution of 5 min.
@@ -64,17 +66,17 @@ The following table show know errors:
 
 | Error on Display | Meaning | Possible Issue | Possible solution |
 |------------------|---------|----------------|-------------------|
-| **ERR WIFI** | The Rainradar could not connect to the WiFi network | No connection to the WiFi router | Fix the WiFi connection to the router, see Configuration Mode |
+| **ERR WIFI** | The Rainradar could not connect to the WiFi network | No connection to the WiFi router | Fix the WiFi connection to the router, see [Configuration Mode](#configuration-mode) |
 | **ERR NTP** | The Rainradar could not connect to the NTP server to synchronize its clock |  No connection to the internet | Fix connection to the internet in the WiFi router |
 | **ERR GET RADAR** or **ERR GET RAIN**| The Rainradar could not get the weather information from the server. | No connection to the internet | see above |
 |  |  | The server providing the radar information is broken/down | The Rainradar uses the [morgenwirdes](https://morgenwirdes.de/api/) server to get the information. Try to visit the site to get more information |
 | **ERR JSON RADAR** or **ERR JSON RAIN**| The Rainradar could not parse the information provided by the server | The server providing the weather information is broken | see above |
 
-In case you suspect the issues in the application itself you can raise an issue ticket in https://github.com/dimitri-rebrikov/rainradar/issues
+In case you suspect the issues in the application itself you can raise an [issue ticket](https://github.com/dimitri-rebrikov/rainradar/issues)
 
 ## Configuration Mode
 
-The configuration mode allows to change the parameters necessary for the Operational Mode:
+The configuration mode allows to change the parameters necessary for the [Operational Mode](#operational-mode):
 
 - the credentials (SSID and password) of the WiFi network the Rainradar shall connect for
 - the German postal index code (PLZ) the Rainradar shall provide the rain forecast for
@@ -100,7 +102,7 @@ Connect to this Access Point using the following password: *rainradar2021*
 
 After successful connection you might get warning that there is no connection to the internet over this network. This is ok and by intention, as now you connected directly and exclusively only to the Rainradar.
 
-Now open the address [http://192.168.4.1](http://192.168.4.1) in the Web Browser and the Rainradar configuration page shall be displayed.
+Now open the address <a href="http://192.168.4.1" target="_blank">http://192.168.4.1</a> in the Web Browser and the Rainradar configuration page shall be displayed.
 
 ### Configuration Page 
 
@@ -125,4 +127,4 @@ The Rainradar will try to connect to the WiFi and provide the result in the "WiF
 
 After successful configuration you can exit the config mode by hitting of the "Exit Config" button. The Rainradar will stop its Access Point, so the connection to the Rainradar will be lost and your device will probably automatically connect to your home network again.
 
-The Rainradar will switch back into the Operational Mode
+The Rainradar will switch back into the [Operational Mode](#operational-mode)
