@@ -102,7 +102,7 @@ Connect to this Access Point using the following password: *rainradar2021*
 
 After successful connection you might get warning that there is no connection to the internet over this network. This is ok and by intention, as now you connected directly and exclusively only to the Rainradar.
 
-Now open the address <a href="http://192.168.4.1" target="_blank">http://192.168.4.1</a> in the Web Browser and the Rainradar configuration page shall be displayed.
+Now open the address [http://192.168.4.1](http://192.168.4.1) in the Web Browser and the Rainradar configuration page shall be displayed.
 
 ### Configuration Page 
 
