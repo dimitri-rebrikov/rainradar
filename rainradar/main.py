@@ -11,6 +11,7 @@ from weather import Weather
 from config_changer import ConfigChanger
 import machine
 import urandom
+import gc
 
 syncTimePeriod = 60*60 # 1 hour
 embUnixTimeDiff = 946684800 # embedded systems use 01-01-2000 as start of the time in compare to the unix' 01-01-1970
@@ -98,6 +99,10 @@ def checkConfigMode():
         configMode = 0
         raise RainradarException("CONF EXIT")
     
+def garbageCollector():
+    gc.collect()
+    print("Free memory: " + str(gc.mem_free()))
+    
 # main loop
 while True:
     disp = Display()
@@ -124,6 +129,7 @@ while True:
             if nextForecastSyncTime <= time.time():
                 updateRainForecastLevels()
             showPause()
+            garbageCollector()
 
     except RainradarException as exp:
         strExp = str(exp)
@@ -132,3 +138,4 @@ while True:
             configMode = 1
         else:
             disp.showText(str(exp), 3)
+        garbageCollector()
