@@ -3,6 +3,7 @@ import usocket as socket
 import time
 import re
 import gc
+from unquote import unquote_plus
 gc.collect()
 
 
@@ -142,6 +143,7 @@ class ConfigChanger:
                 for paramValue in split1[1].split('&'):
                     if '=' in paramValue:
                         param, value = paramValue.split('=')
+                        value = unquote_plus(value)
                     else:
                         param = paramValue
                         value = ''
@@ -165,7 +167,6 @@ class ConfigChanger:
             if testConnection:
                 self.__testWifiConnection()
         return containsQueryParameters
-
 
     def __testWifiConnection(self):
         self.connectionSuccessful = False
