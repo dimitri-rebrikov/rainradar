@@ -83,7 +83,7 @@ The configuration mode allows to change the parameters necessary for the [Operat
 
 During the initial start (i.e. if there is no configuration) the Rainradar will automatically switch into the Configuration Mode.
 
-To switch into configuration mode any time later you shall press the configuration button through the hole in the lid. Please use a thin non-metal stick for this, for example a toothpick. The button will make a haptic noticeable click.
+To switch into configuration mode any time later you shall press the configuration button through the hole in the lid. Please use a thin non-metal stick for this, for example a toothpick. The button will make a haptic noticeable click. The switch into the configuration mode might take some seconds if the device is currently displaying the error message or make some other processing which cannot be interrupted.
 
 After switching into the Configuration Mode the Rainradar will show "CONF" on the display.
 
