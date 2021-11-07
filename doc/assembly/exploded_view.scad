@@ -16,30 +16,53 @@ dhEsp2=[153,33,0];
 dhEsp3=[200,10,0];
 dhEsp4=[200,33,0];
 
-// just to show all parts necessary
-translate([-10,0,0]) standoff12FF();
-translate([-20,0,0]) standoff06MF();
-translate([-30,0,0]) screw();
-translate([-40,0,0]) screwNut();
-translate([-50,0,0]) washer();
-
-// explode view of elements
-casingWithHoles();
-translate([0,0,-10]) bottomScrews();
-translate([0,0,30]) {
-    ledStandoffs();
-    espStandoffs();
-    lidStandoffs1();
+module parts() {
+    // just to show all parts necessary
+    translate([-10,0,0]) standoff12FF();
+    translate([-20,0,0]) standoff06MF();
+    translate([-30,0,0]) screw();
+    translate([-40,0,0]) screwNut();
+    translate([-50,0,0]) washer();
 }
-translate([0,0,45]) lidWashers();
-translate([0,0,60]) lidStandoffs2();
-translate([0,0,50]) ledBase();
-translate([0,0,55]) esp();
-translate([0,0,65]) espScrews();
-translate([0,0,60]) ledScrewNuts();
-translate([0,0,70]) ledUnmounted();
-translate([0,0,80]) lid();
-translate([0,0,110]) lidScrews();
+
+module explode_view() {
+    // explode view of elements
+    casingWithHoles();
+    translate([0,0,-10]) bottomScrews();
+    translate([0,0,30]) {
+        ledStandoffs();
+        espStandoffs();
+        lidStandoffs1();
+    }
+    translate([0,0,45]) lidWashers();
+    translate([0,0,60]) lidStandoffs2();
+    translate([0,0,50]) ledBase();
+    translate([0,0,55]) esp();
+    translate([0,0,65]) espScrews();
+    translate([0,0,60]) ledScrewNuts();
+    translate([0,0,70]) ledUnmounted();
+    translate([0,0,80]) lid();
+    translate([0,0,110]) lidScrews();
+}
+
+parts();
+explode_view();
+// or
+// projection for creating a dxf file for casing drillings
+//projection(cut=true) translate([0,0, -1])
+//    casingWithHoles();
+// or
+// projection for creating a dxf file for casing side view
+//projection(cut=true) translate([0,0, 1]) rotate([0,90,0])
+//    casingWithHoles();
+// or
+// projection for creating a dxf file for lid
+//projection(cut=true) translate([0,0, -20])
+//    lid();
+// or
+// projection for creating a dxf file for lid USB side
+//projection(cut=true) translate([0,0, 209]) rotate([0,90,0])
+//    lid();
 
 
 module standoff12FF() {
