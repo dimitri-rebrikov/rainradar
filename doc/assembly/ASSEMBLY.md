@@ -16,7 +16,7 @@ The assembly idea is based on the project from the German Make Magazine https://
 
 ### Schematic
 
-![](schematic.png)
+![](schematic.jpg)
 
 ### Soldering
 
