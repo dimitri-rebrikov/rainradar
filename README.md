@@ -9,19 +9,21 @@ and the intensity of the rain for the 6 hours (following the 2 hours) with 1 hou
 
 # common
 The Rain Radar is a combination of:
-- a ESP32 micro controller
+- an ESP32 micro controller
 - a chain of four MAX7219 8x8 LED matrices
 - an online service providing the weather forecast by German postal index, https://morgenwirdes.de/api/
 
-The project is inspired by a project from the German Make Magazine https://github.com/MakeMagazinDE/LED-Laufschrift
+The project is inspired by the project from the German Make Magazine https://github.com/MakeMagazinDE/LED-Laufschrift
 
 # manual
 
-See the [User Manual](doc/manual/MANUAL.md)
+See [User Manual](doc/manual/MANUAL.md)
 
+# assembly
+
+See [Assembly](docs/assembly/ASSEMBLY.md)
 # setup
 
-- connect ESP32 to MAX7219 according to https://github.com/mcauser/micropython-max7219
 - install Python on the PC
 - flash the MicroPython image on the ESP32 as described in https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
   - `pip install esptool`
@@ -41,25 +43,3 @@ See the [User Manual](doc/manual/MANUAL.md)
   - `ampy --port COM4 ls`
 - restart ESP32
 
-# assembly
-## Bill of material
-- ESP32 dev board with mounting holes
-- Dot matrix module 4 8x8 with MAX7219 controller
-- Aluminum U profile 23.5 x 43.5 mm (inside dimensions 20 x 40) cut to the length of 205 mm
-- Acrylic glass plate, red transparent, cut to the pieces 
-  - 40 x 205 for the top of the lid
-  - 19 x 40 (2 pices) for the sides of the lid
-- 4 x brass standoffs m2.5 12 mm height for the ESP32
-- 4 x brass standoffs m2.5 6 mm height for the matrix module
-- 4 x mounting blocks m2.5 [buerklin 17H9204](https://www.buerklin.com/en/Mounting-element/p/17H9204) for the lid
-- Screws/nuts m2.5
-## Blueprints
-- [Drilling plan for the U profile](doc/case_drillings.scad). It can be opened in [OpenScad](https://openscad.org/) and the exported as [DXF file](https://en.wikipedia.org/wiki/AutoCAD_DXF) for measures and processing.
-## Pictures of the assembly
-<img src="doc/assembly_01.jpg" height="300">
-<img src="doc/assembly_02.jpg" height="300">
-<img src="doc/assembly_03.jpg" height="300">
-<img src="doc/assembly_04.jpg" height="300">
-<img src="doc/assembly_05.jpg" height="300">
-<img src="doc/assembly_06.jpg" height="300">
-<img src="doc/assembly_07.jpg" height="300">
