@@ -1,5 +1,4 @@
 # rainradar
-(in development)
 
 Rain Radar (German: Regenradar)  displays the rain forecast on a 32x8 led matrix.
 It shows the intensity of the rain for the next 2 hours with 5 minutes resolution 
