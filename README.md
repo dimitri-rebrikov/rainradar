@@ -20,7 +20,7 @@ See [User Manual](doc/manual/MANUAL.md)
 
 # assembly
 
-See [Assembly](docs/assembly/ASSEMBLY.md)
+See [Assembly](doc/assembly/ASSEMBLY.md)
 # setup
 
 - install Python on the PC
