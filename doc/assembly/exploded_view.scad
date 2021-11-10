@@ -63,6 +63,10 @@ explode_view();
 // projection for creating a dxf file for lid USB side
 //projection(cut=true) translate([0,0, 209]) rotate([0,90,0])
 //    lid();
+// or
+// projection for creating a dxf file for lid cross section
+//projection(cut=true) translate([0,0,2]) rotate([-90,0,0])
+//    lid();
 
 
 module standoff12FF() {
