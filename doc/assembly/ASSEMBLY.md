@@ -89,7 +89,7 @@ Just few remarks:
   - 12mm standoff nut-nut
  
   to implement the length of the 19mm 
-- The standoffs for the LED module are 6mm nut-screw. As the LED module is 13mm height this makes it fits perfectly under the lid. On the one of the  pictures below there are washers under the LED standoffs. This was made because for this rainradar exemplar I run out of the 6mm standoffs and used the 5mm version with the addition of the 1mm washer.
+- The standoffs for the LED module are 6mm long. As the LED module is 13mm height this makes it fits perfectly under the lid. If you use a nut-screw standoff you will probably don't need to remove the 2 outside LED matrixes as you can just slide the nuts under them and screw them together with the standoff as seen on the picture below. On the same picture there are washers under the LED standoffs. This was made because for this rainradar exemplar I run out of the 6mm standoffs and used the 5mm version with the addition of the 1mm washer instead.
 
 ![](assembly_03.jpg)
 ![](assembly_04.jpg)
