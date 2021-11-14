@@ -80,7 +80,16 @@ Remark: I bought all standoffs, screws, nuts, washer as a set on eBay.
 
 ### Put everything together 
 
-See the pictures:
+For the idea of assembling everything together see the pictures below.
+
+Just few remarks:
+- The standoffs for the lid are build from the combination of:
+  - 6mm standoff nut-screw
+  - 1mm washer
+  - 12mm standoff nut-nut
+ 
+  to implement the length of the 19mm 
+- The standoffs for the LED module are 6mm nut-screw. As the LED module is 13mm height this makes it fits perfectly under the lid. On the one of the  pictures below there are washers under the LED standoffs. This was made because for this rainradar exemplar I run out of the 6mm standoffs and used the 5mm version with the addition of the 1mm washer.
 
 ![](assembly_03.jpg)
 ![](assembly_04.jpg)
