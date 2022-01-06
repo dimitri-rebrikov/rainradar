@@ -47,25 +47,34 @@ def unix2EmbTime(unixTime):
     return unixTime - embUnixTimeDiff
 
 def logCurrentTime():
-    print("Current time: UTC:" + formatTimeArr(time.gmtime()) + ", local:" + formatTimeArr(time.localtime()) + ", unix:" + str(emb2UnixTime(time.time())) + ", embedded:" + str(time.time()))
+    print("Current time: " + formatEmbTime(time.time()) + " UTC")
     
-def formatTimeArr(arr):
-    return str(arr[0]) + "-" + str(arr[1]) + "-" + str(arr[2]) + " " + str(arr[3]) + ":" + str(arr[4]) + ":" + str(arr[5])
+def formatEmbTime(embTime):
+    return '{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*time.gmtime(embTime))
         
 def updateRainRadarLevels():
     mmRecordList = removePastRecords(radar.getMmRecordList(), 0)
-    print("rain radar records: " + repr(mmRecordList))
+    print("rain radar records:")
+    logLevels(mmRecordList)
     levelList = rain.mmRecordListToLevelList(mmRecordList)
     disp.showRainLevels(levelList)
     setNextRadarSyncTime(mmRecordList)
     
 def updateRainForecastLevels():
     forecastList = removePastRecords(weather.getRainHourlyForecast(), 60 * 60 * 2)
-    print("rain forecast records: " + repr(forecastList))
+    print("rain forecast records:")
+    logLevels(forecastList)
     levelList = rain.mmRecordListToLevelList(forecastList)
     disp.showForecastLevels(levelList)
-    setNextForecastSyncTime(forecastList)
+    setNextForecastSyncTime()
     
+def logLevels(levelList):
+    for levelObject in levelList:
+        logLevel(levelObject)
+
+def logLevel(levelObject):
+    print(formatEmbTime(unix2EmbTime(levelObject['timestamp'])) + " -> " + str(levelObject['mm']))
+
 def removePastRecords(timestampRecordList, addFutureSeconds):
      #print("unixTime:" + str(unixTime(time.time())))
      #print("beforFilter: " + repr(timestampRecordList))
@@ -81,12 +90,10 @@ def setNextRadarSyncTime(mmRecordList):
     else:
         nextRadarSyncTime = unix2EmbTime(mmRecordList[0]['timestamp']) + 15 + getRandomInt(10)
         
-def setNextForecastSyncTime(forecastList):
+def setNextForecastSyncTime():
     global nextForecastSyncTime
-    if len(forecastList) < 1:
-        nextForecastSyncTime = time.time() + ( 60 * 60 )
-    else:
-        nextForecastSyncTime = unix2EmbTime(forecastList[0]['timestamp']) - (60 * 60 * 3) + getRandomInt(20)
+    nextForecastSyncTime = time.time() + ( 30 * 60 ) + getRandomInt(20)
+    print("nextForecastSyncTime: " + formatEmbTime(nextForecastSyncTime))
    
 def showPause():
     print("Pause for " + str(nextRadarSyncTime - time.time()) + " seconds.")
@@ -138,7 +145,6 @@ while True:
             syncTime()
             checkConfigMode()
             updateRainRadarLevels()
-            print("nextForecastSyncTime:"+str(emb2UnixTime(nextForecastSyncTime))+", time:"+str(emb2UnixTime(time.time())))
             checkConfigMode()
             if nextForecastSyncTime <= time.time():
                 updateRainForecastLevels()
