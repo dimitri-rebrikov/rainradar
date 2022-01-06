@@ -12,6 +12,7 @@ from config_changer import ConfigChanger
 import machine
 import urandom
 import gc
+import sys
 
 syncTimePeriod = 60*60 # 1 hour
 embUnixTimeDiff = 946684800 # embedded systems use 01-01-2000 as start of the time in compare to the unix' 01-01-1970
@@ -28,13 +29,15 @@ bootButton.irq(trigger=machine.Pin.IRQ_FALLING, handler=bootButtonCallback)
 
 def syncTime():
     global syncTimePeriod, lastSyncTime
+    logCurrentTime()
     if lastSyncTime == 0 or lastSyncTime < time.time() - syncTimePeriod:
         try:
             ntptime.settime()
         except Exception as e:
             print(repr(e))
             raise RainradarException("ERR NTP")
-        print("Synced time to: " + str(time.time()) + ", unix:" + str(emb2UnixTime(time.time())) + ", " + str(time.gmtime()))
+        print("Synced time with NTP server")
+        logCurrentTime()
         lastSyncTime = time.time()
         
 def emb2UnixTime(embTime):
@@ -42,6 +45,12 @@ def emb2UnixTime(embTime):
 
 def unix2EmbTime(unixTime):
     return unixTime - embUnixTimeDiff
+
+def logCurrentTime():
+    print("Current time: UTC:" + formatTimeArr(time.gmtime()) + ", local:" + formatTimeArr(time.localtime()) + ", unix:" + str(emb2UnixTime(time.time())) + ", embedded:" + str(time.time()))
+    
+def formatTimeArr(arr):
+    return str(arr[0]) + "-" + str(arr[1]) + "-" + str(arr[2]) + " " + str(arr[3]) + ":" + str(arr[4]) + ":" + str(arr[5])
         
 def updateRainRadarLevels():
     mmRecordList = removePastRecords(radar.getMmRecordList(), 0)
@@ -62,24 +71,25 @@ def removePastRecords(timestampRecordList, addFutureSeconds):
      #print("beforFilter: " + repr(timestampRecordList))
      return list(filter(lambda rec: rec['timestamp'] >= emb2UnixTime(time.time()+ addFutureSeconds), timestampRecordList))
     
-def getRandom(base):
-    return urandom.random() * base
+def getRandomInt(base):
+    return int(urandom.random() * base)
     
 def setNextRadarSyncTime(mmRecordList):
     global nextRadarSyncTime
     if len(mmRecordList) < 1:
-        nextRadarSyncTime = time.time() + ( 5 * 60 ) + getRandom(10)
+        nextRadarSyncTime = time.time() + ( 5 * 60 ) + getRandomInt(10)
     else:
-        nextRadarSyncTime = unix2EmbTime(mmRecordList[0]['timestamp']) + 15 + getRandom(10)
+        nextRadarSyncTime = unix2EmbTime(mmRecordList[0]['timestamp']) + 15 + getRandomInt(10)
         
 def setNextForecastSyncTime(forecastList):
     global nextForecastSyncTime
     if len(forecastList) < 1:
         nextForecastSyncTime = time.time() + ( 60 * 60 )
     else:
-        nextForecastSyncTime = unix2EmbTime(forecastList[0]['timestamp']) - (60 * 60 * 3) + getRandom(20)
+        nextForecastSyncTime = unix2EmbTime(forecastList[0]['timestamp']) - (60 * 60 * 3) + getRandomInt(20)
    
 def showPause():
+    print("Pause for " + str(nextRadarSyncTime - time.time()) + " seconds.")
     while(nextRadarSyncTime > time.time()):
         minutesToWait = math.ceil( (nextRadarSyncTime - time.time()) / 60 )
         disp.showWaitTime(minutesToWait)
@@ -143,6 +153,7 @@ while True:
     except Exception as exp:
         strExp = str(exp)
         print("Unknown Exception: " + strExp)
+        sys.print_exception(exp)
         while True: # stick on showing unknown exception
             disp.showText(strExp, 3)
-        garbageCollector()
+            garbageCollector()
