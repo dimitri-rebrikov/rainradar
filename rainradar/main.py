@@ -135,8 +135,14 @@ while True:
             showPause()
             garbageCollector()
 
-    except RainradarException as exp:
-        strExp = str(exp)
+    except RainradarException as rexp:
+        strExp = str(rexp)
         print("RainradarException: " + strExp)
-        disp.showText(str(exp), 3)
+        disp.showText(strExp, 3)
+        garbageCollector()
+    except Exception as exp:
+        strExp = str(exp)
+        print("Unknown Exception: " + strExp)
+        while True: # stick on showing unknown exception
+            disp.showText(strExp, 3)
         garbageCollector()
