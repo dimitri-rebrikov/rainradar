@@ -23,7 +23,7 @@ See [User Manual](doc/manual/MANUAL.md)
 See [Assembly](doc/assembly/ASSEMBLY.md)
 # setup
 
-- install Silicon Labs CP210x VCP driver from silabs.com so you PC can communicate with the ESP32 
+- install Silicon Labs CP210x VCP driver from silabs.com so your PC can communicate with the ESP32 
 - install Python 3.x as the software used below depends on it
 - flash the MicroPython image on the ESP32 as described in https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
   - `pip3 install esptool`
@@ -37,7 +37,7 @@ See [Assembly](doc/assembly/ASSEMBLY.md)
   - `ampy --port COM4 mkdir lib`
   - `ampy --port COM4 put ~/Downloads/esp32/micropython/max7219.py lib/max7219.py`
   - `ampy --port COM4 ls lib`
-- download the rainradar code from this project
+- download the rainradar code from this project (i.e. from )
 - upload the rainradar code (i.e. the python modules *.py) to the ESP32
   - `ampy --port COM4 put ~/Downloads/esp32/rainradar/rainradar/`
   - `ampy --port COM4 ls`
