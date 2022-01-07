@@ -23,7 +23,8 @@ See [User Manual](doc/manual/MANUAL.md)
 See [Assembly](doc/assembly/ASSEMBLY.md)
 # setup
 
-- install Python on the PC
+- install Silicon Labs CP210x VCP driver from silabs.com so you PC can communicate with the ESP32 
+- install Python 3.x as the software used below depends on it
 - flash the MicroPython image on the ESP32 as described in https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
   - `pip install esptool`
   - `esptool.py erase_flash`
