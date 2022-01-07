@@ -26,11 +26,11 @@ See [Assembly](doc/assembly/ASSEMBLY.md)
 - install Silicon Labs CP210x VCP driver from silabs.com so you PC can communicate with the ESP32 
 - install Python 3.x as the software used below depends on it
 - flash the MicroPython image on the ESP32 as described in https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
-  - `pip install esptool`
+  - `pip3 install esptool`
   - `esptool.py erase_flash`
   - `esptool.py  write_flash -z 0x1000  ~/Downloads/esp32/micropython/esp32-20210902-v1.17.bin`
 - install the tool to copy the files to ESP32
-  - `pip install adafruit-ampy`
+  - `pip3 install adafruit-ampy`
   - `ampy --port COM4 ls`
 - download the `max7219.py` module from  https://github.com/mcauser/micropython-max7219
 - upload the max7219 module to the ESP32
