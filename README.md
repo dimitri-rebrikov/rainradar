@@ -28,18 +28,18 @@ See [Assembly](doc/assembly/ASSEMBLY.md)
 - flash the MicroPython image on the ESP32 as described in https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
   - `pip3 install esptool`
   - `esptool.py erase_flash`
-  - `esptool.py  write_flash -z 0x1000  ~/Downloads/esp32/micropython/esp32-20210902-v1.17.bin`
+  - `esptool.py  write_flash -z 0x1000  ~/Downloads/esp32/micropython/esp32-20210902-v1.17.bin` (assuming you downloaded the image into %HOMEPATH%/Downloads/esp32/micropython)
 - install the tool to copy the files to ESP32
   - `pip3 install adafruit-ampy`
   - `ampy --port COM4 ls`
 - download the `max7219.py` module from  https://github.com/mcauser/micropython-max7219
 - upload the max7219 module to the ESP32
   - `ampy --port COM4 mkdir lib`
-  - `ampy --port COM4 put ~/Downloads/esp32/micropython/max7219.py lib/max7219.py`
+  - `ampy --port COM4 put ~/Downloads/esp32/micropython/max7219.py lib/max7219.py` (assuming you downloaded the module into %HOMEPATH%/Downloads/esp32/micropython)
   - `ampy --port COM4 ls lib`
-- download the rainradar code from this project (i.e. from )
+- download this project (i.e. https://github.com/dimitri-rebrikov/rainradar)
 - upload the rainradar code (i.e. the python modules *.py) to the ESP32
-  - `ampy --port COM4 put ~/Downloads/esp32/rainradar/rainradar/`
+  - `ampy --port COM4 put ~/Downloads/esp32/rainradar/rainradar/` (assuming you downloaded the project into %HOMEPATH%/Downloads/esp32/rainradar)
   - `ampy --port COM4 ls`
 - restart ESP32
 
