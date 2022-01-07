@@ -41,5 +41,5 @@ See [Assembly](doc/assembly/ASSEMBLY.md)
 - upload the rainradar code (i.e. the python modules *.py) to the ESP32
   - `ampy --port COM4 put ~/Downloads/esp32/rainradar/rainradar/` (assuming you downloaded the project into %HOMEPATH%/Downloads/esp32/rainradar)
   - `ampy --port COM4 ls`
-- restart ESP32
+- restart ESP32 by disconnecting/connecting the power supply (i.e. USB)
 
