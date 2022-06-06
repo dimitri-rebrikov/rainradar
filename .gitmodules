@@ -1,0 +1,3 @@
+[submodule "aws-backend/dwd_utils"]
+	path = aws-backend/dwd_utils
+	url = https://github.com/dimitri-rebrikov/dwd_utils.git
