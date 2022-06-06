@@ -8,14 +8,28 @@ def rainradarForPlz(plzStr):
     # print(plzInfo)
     return rainradarForCoord(lat=plzInfo['lat'], lon=plzInfo['lon'])
 
-
 def rainradarForCoord(lat, lon):
+    data = radolanDataForCoord(lat, lon)[:24]
+    data.append([0 for i in range(8)]) # emtpy row between rainradar and rain forecast
+    data.extend(mosmixDataForCoord(lat, lon)[:6])
+    return data
+
+def radolanDataForCoord(lat, lon):
     radolanData = radolan.RadolanProducts.getLatestRvData(lat=float(lat), lon=float(lon))
     # print(radolanData)
     return list(map(lambda lev: levelToMatrix(lev),\
         map(lambda mm: mmToLevel(mm) + 1,\
             map(lambda el: el['value'],\
                 radolanData['forecasts']))))
+
+def mosmixDataForCoord(lat, lon):
+    mosmixData= mosmix.StationList.getNearestStation(lat=float(lat), lon=float(lon))['station'].getData({'RR1c'}, range(3,9))
+    # print(mosmixData)
+    return list(map(lambda lev: levelToMatrix(lev),\
+        map(lambda mm: mmToLevel(mm) + 1,\
+            map(lambda el: float(el['values']['RR1c']),\
+                mosmixData['forecasts']))))
+    
 
 
 def mmToLevel(mm):
