@@ -2,14 +2,17 @@ import json
 import rainradar
 
 def lambda_handler(event, context):
-    queryParams = event['queryStringParameters']
+    
     try:
+        assert 'queryStringParameters' in event, "missing plz or lat/lon parameters"
+        queryParams = event['queryStringParameters']
+
         if 'plz' in queryParams:
             return json.dumps(rainradar.rainradarForPlz(queryParams['plz']))
         elif 'lat' in queryParams and 'lon' in queryParams:
             return json.dumps(rainradar.rainradarForCoord(lat=queryParams['lat'], lon=queryParams['lon']))
-        else:
-            assert False, "missing plz or lat/lon parameters"
+
+        assert False, "missing plz or lat/lon parameters"
     except AssertionError as msg:
         return {
             "statusCode": 400,
@@ -21,6 +24,13 @@ def lambda_handler(event, context):
 
 if __name__ == "__main__":
     # wrong parameter simulation 
+    # print(lambda_handler({
+    #     "bla": {
+    #         "parameter1": "value1,value2",
+    #         "parameter2": "value"
+    #     }
+    # }, None))
+    #
     # print(lambda_handler({
     #     "queryStringParameters": {
     #         "parameter1": "value1,value2",
