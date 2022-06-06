@@ -13,7 +13,7 @@ def rainradarForCoord(lat, lon):
     radolanData = radolan.RadolanProducts.getLatestRvData(lat=float(lat), lon=float(lon))
     # print(radolanData)
     return list(map(lambda lev: levelToMatrix(lev),\
-        map(lambda mm: mmToLevel(mm),\
+        map(lambda mm: mmToLevel(mm) + 1,\
             map(lambda el: el['value'],\
                 radolanData['forecasts']))))
 
