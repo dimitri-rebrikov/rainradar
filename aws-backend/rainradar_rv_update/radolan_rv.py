@@ -1,10 +1,20 @@
+import csv
+import io
 from dwd_utils import mosmix, plz, radolan
 
 
-def radolanRvData():
+def radolanRvDataStream():
     plzToCoordMap = {k : (plz.plzMap[k]['lat'], plz.plzMap[k]['lon'] ) for k in plz.plzMap.keys() }
     radolanData = radolan.RadolanProducts.getLatestRvData(set(plzToCoordMap.values()))
-    return { k : extractForecastsForCoord(plzToCoordMap[k], radolanData) for k in plzToCoordMap  }
+    f = io.StringIO()
+    csv_writer = csv.writer(f)
+    for k in plzToCoordMap:
+        a = []
+        a.append(k)
+        a.extend(extractForecastsForCoord(plzToCoordMap[k], radolanData))
+        csv_writer.writerow(a)
+    f.seek(0)
+    return f
 
 def extractForecastsForCoord(latLon, radolanData):
     return list(map(lambda lev: levelToMatrix(lev),\
@@ -41,7 +51,10 @@ def levelToMatrix(level):
 
 
 if __name__ == "__main__":
-    print(radolanRvData())
+    with radolanRvDataStream() as file:
+       for row in csv.reader(file):
+           if row[0] == '70599':
+               print(row)
 
 
     

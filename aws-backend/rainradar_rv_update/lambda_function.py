@@ -1,15 +1,12 @@
 import boto3
 import radolan_rv
 
-db = boto3.resource("dynamodb")
+client = boto3.client('s3')
 
 def lambda_handler(event, context):
-    rvTable = db.Table("rainradar_rv")
-    plzDataMap = radolan_rv.radolanRvData()
-    with rvTable.batch_writer() as batch:
-        for plz, data in plzDataMap.items():
-            batch.put_item(
-                        Item={
-                            'plz':plz,
-                            'info': data
-                        })
+    with radolan_rv.radolanRvDataStream() as file:
+        client.put_object( 
+            Bucket='rainradar',
+            Body=radolan_rv.radolanRvDataStream().read(),
+            Key='rainradar_rv_data'
+        )
