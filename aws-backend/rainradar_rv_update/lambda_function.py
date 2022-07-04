@@ -7,6 +7,6 @@ def lambda_handler(event, context):
     with radolan_rv.radolanRvDataStream() as file:
         client.put_object( 
             Bucket='rainradar',
-            Body=radolan_rv.radolanRvDataStream().read(),
+            Body=file.read(),
             Key='rainradar_rv_data'
         )
