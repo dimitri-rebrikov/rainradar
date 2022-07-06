@@ -24,7 +24,9 @@ def extractForecastsForCoord(latLon, radolanData):
 
 
 def mmToLevel(mm):
-    if(mm < 0.1):
+    if(mm < 0):
+        return -1 # no value
+    elif(mm < 0.1):
         return 0 # no rain
     elif(mm < 1.2):
         return 1 # very light rain
@@ -53,7 +55,7 @@ def levelToMatrix(level):
 if __name__ == "__main__":
     with radolanRvDataStream() as file:
        for row in csv.reader(file):
-           if row[0] == '70599':
+           if row[0] == '24944':
                print(row)
 
 
