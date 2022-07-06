@@ -5,6 +5,18 @@ import io
 
 client = boto3.client('s3')
 
+def get_data(key, plz):
+    for row in csv.reader(
+        io.StringIO(
+            client.get_object(
+                Bucket='rainradar',
+                Key=key
+            )['Body'].read().decode()
+        )
+    ):
+        if int(row[0]) == plz:
+            return row[1:]
+
 
 def lambda_handler(event, context):
     if  'queryStringParameters' not in event:
@@ -27,16 +39,12 @@ def lambda_handler(event, context):
 
     plz = int(queryParams['plz'])
 
-    for row in csv.reader(
-        io.StringIO(
-            client.get_object(
-                Bucket='rainradar',
-                Key='rainradar_rv_data'
-            )['Body'].read().decode()
-        )
-    ):
-        if int(row[0]) == plz:
-            return row[1:]
+    mosmix_data = get_data('rainradar_rv_data', plz)
+    if(mosmix_data):
+        mosmix_data.append('00000000') # empty row between the data sets
+        mosmix_data.extend(get_data('rainradar_mosmix_data', plz)) # add mosmix data
+        return mosmix_data
+
     return {
         "statusCode": 404,
         "body": json.dumps({
