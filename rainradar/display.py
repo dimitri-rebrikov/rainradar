@@ -3,11 +3,8 @@ from machine import Pin, SPI
 import framebuf
 import time
 
-radar_start_x = 0
-radar_max_x = 24
-
-forecast_start_x = 25
-forecast_max_x = 30
+start_x = 0
+max_x = 30
 
 time_x = 31
 
@@ -22,12 +19,6 @@ class Display:
         self.clean()
 
     def showRainLevels(self, levelList):
-        self._showLevels(levelList, radar_start_x, radar_max_x)
-
-    def showForecastLevels(self, levelList):
-        self._showLevels(levelList, forecast_start_x, forecast_max_x)
-        
-    def _showLevels(self, levelList, start_x, max_x):
         print("showLevels: start: " + str(start_x) + ", max: " + str(max_x) + ", levels: "+ repr(levelList))
         if self.needClean:
             self.clean()
@@ -36,8 +27,10 @@ class Display:
             self.disp.fill_rect(start_x, 0, max_x - start_x + 1, max_y, 0)
         # iterate over values and show them as bars
         for i in range(min(len(levelList), max_x - start_x + 1)):
-            level = levelList[i] + 1 # display zero level as a bar with one element
-            self.disp.vline(start_x + i, max(max_y - level, 0), level, 1)
+            level = levelList[i]
+            for j in range(min(len(level), max_y)):
+                self.disp.pixel(i, max_y - 1 - j, int(level[j:j+1]))
+
         self.disp.show()
         
     def showWaitTime(self, toWait):
@@ -86,7 +79,35 @@ class Display:
     def test(self):
         self.showText("ABCD", 2)
         self.showText("01234567890", 2)
-        rainLevels=[0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1, 0, 2, 4, 6, 4, 2, 0, 1, 3, 7, 4, 2, 1]
+        rainLevels=['00000000',
+                    '10000000',
+                    '11000000',
+                    '11100000',
+                    '11110000',
+                    '11111000',
+                    '11111100',
+                    '11111110',
+                    '11111111',
+                    '11111110',
+                    '11111100',
+                    '11111000',
+                    '11110000',
+                    '11100000',
+                    '11000000',
+                    '10000000',
+                    '00000000',
+                    '11000000',
+                    '11110000',
+                    '11111100',
+                    '11110000',
+                    '11000000',
+                    '00000000',
+                    '10000000',
+                    '11100000',
+                    '11111110',
+                    '11110000',
+                    '11000000',
+                    '10000000']
         for i in range(len(rainLevels)):
             self.showRainLevels(rainLevels)
             time.sleep(1)

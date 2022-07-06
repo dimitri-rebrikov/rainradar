@@ -4,18 +4,12 @@ from radar import Radar
 import wifi
 from config import Config
 from exception import RainradarException
-import ntptime
 import math
-import rain
-from weather import Weather
 from config_changer import ConfigChanger
 import machine
 import urandom
 import gc
 import sys
-
-syncTimePeriod = 60*60 # 1 hour
-embUnixTimeDiff = 946684800 # embedded systems use 01-01-2000 as start of the time in compare to the unix' 01-01-1970
 
 configMode = 0
 
@@ -27,74 +21,28 @@ def bootButtonCallback(pin):
 bootButton = machine.Pin(0, machine.Pin.IN, machine.Pin.PULL_UP)
 bootButton.irq(trigger=machine.Pin.IRQ_FALLING, handler=bootButtonCallback)
 
-def syncTime():
-    global syncTimePeriod, lastSyncTime
-    logCurrentTime()
-    if lastSyncTime == 0 or lastSyncTime < time.time() - syncTimePeriod:
-        try:
-            ntptime.settime()
-        except Exception as e:
-            print(repr(e))
-            raise RainradarException("ERR NTP")
-        print("Synced time with NTP server")
-        logCurrentTime()
-        lastSyncTime = time.time()
-        
-def emb2UnixTime(embTime):
-    return embTime + embUnixTimeDiff
 
-def unix2EmbTime(unixTime):
-    return unixTime - embUnixTimeDiff
-
-def logCurrentTime():
-    print("Current time: " + formatEmbTime(time.time()) + " UTC")
-    
-def formatEmbTime(embTime):
-    return '{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*time.gmtime(embTime))
-        
 def updateRainRadarLevels():
-    mmRecordList = removePastRecords(radar.getMmRecordList(), 0)
+    levelList = radar.getLevelList()
     print("rain radar records:")
-    logLevels(mmRecordList)
-    levelList = rain.mmRecordListToLevelList(mmRecordList)
+    logLevels(levelList)
     disp.showRainLevels(levelList)
-    setNextRadarSyncTime(mmRecordList)
-    
-def updateRainForecastLevels():
-    forecastList = removePastRecords(weather.getRainHourlyForecast(), 60 * 60 * 2)
-    print("rain forecast records:")
-    logLevels(forecastList)
-    levelList = rain.mmRecordListToLevelList(forecastList)
-    disp.showForecastLevels(levelList)
-    setNextForecastSyncTime()
+    setNextRadarSyncTime()
     
 def logLevels(levelList):
     for levelObject in levelList:
         logLevel(levelObject)
 
 def logLevel(levelObject):
-    print(formatEmbTime(unix2EmbTime(levelObject['timestamp'])) + " -> " + str(levelObject['mm']))
-
-def removePastRecords(timestampRecordList, addFutureSeconds):
-     #print("unixTime:" + str(unixTime(time.time())))
-     #print("beforFilter: " + repr(timestampRecordList))
-     return list(filter(lambda rec: rec['timestamp'] >= emb2UnixTime(time.time()+ addFutureSeconds), timestampRecordList))
+    print(levelObject)
     
 def getRandomInt(base):
     return int(urandom.random() * base)
     
-def setNextRadarSyncTime(mmRecordList):
+def setNextRadarSyncTime():
     global nextRadarSyncTime
-    if len(mmRecordList) < 1:
-        nextRadarSyncTime = time.time() + ( 5 * 60 ) + getRandomInt(10)
-    else:
-        nextRadarSyncTime = unix2EmbTime(mmRecordList[0]['timestamp']) + 15 + getRandomInt(10)
-        
-def setNextForecastSyncTime():
-    global nextForecastSyncTime
-    nextForecastSyncTime = time.time() + ( 30 * 60 ) + getRandomInt(20)
-    print("nextForecastSyncTime: " + formatEmbTime(nextForecastSyncTime))
-   
+    nextRadarSyncTime = time.time() + ( 5 * 60 ) + getRandomInt(10)
+ 
 def showPause():
     print("Pause for " + str(nextRadarSyncTime - time.time()) + " seconds.")
     while(nextRadarSyncTime > time.time()):
@@ -123,9 +71,7 @@ def garbageCollector():
 # main loop
 while True:
     disp = Display()
-    lastSyncTime = 0
     nextRadarSyncTime = 0
-    nextForecastSyncTime = 0
     try:
         cfg = Config()
         configChanger = ConfigChanger(cfg, disp)
@@ -140,14 +86,10 @@ while True:
         checkConfigMode()
         wifi.connect(cfg.getSsid(), cfg.getPassword())
         radar = Radar(plz)
-        weather = Weather(plz)
         while True:
-            syncTime()
             checkConfigMode()
             updateRainRadarLevels()
             checkConfigMode()
-            if nextForecastSyncTime <= time.time():
-                updateRainForecastLevels()
             showPause()
             garbageCollector()
 
