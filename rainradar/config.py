@@ -12,7 +12,10 @@ class Config:
         self.config = {
             'ssid':'change_me',
             'password':'change_me',
-            'plz':'change_me'
+            'plz':'change_me',
+            'brightness':'10',
+            'brightnessNight':'1',
+            'timeNight':'23:00-06:00'
             }
         
     def readConfig(self):
@@ -51,3 +54,21 @@ class Config:
     
     def setPlz(self, plz):
         self.config['plz'] = plz
+
+    def setBrightness(self, brightness):
+        self.config['brightness'] = brightness
+
+    def getBrightness(self):
+        return self.config['brightness']
+
+    def setBrightnessNight(self, brightnessNight):
+        self.config['brightnessNight'] = brightnessNight
+
+    def getBrightnessNight(self):
+        return self.config['brightnessNight']
+
+    def setTimeNight(self, timeNight):
+        self.config['timeNight'] = timeNight
+
+    def getTimeNight(self):
+        return self.config['timeNight']

@@ -4,27 +4,62 @@ from radar import Radar
 import wifi
 from config import Config
 from exception import RainradarException
+import ntptime
 import math
 from config_changer import ConfigChanger
 import machine
 import urandom
 import gc
 import sys
+import timeframe
+
+syncTimePeriod = 60*60 # 1 hour
 
 configMode = 0
 
+def log(text):
+    logCurrentTime()
+    print(text)
+
 def bootButtonCallback(pin):
   global configMode
-  print("boot button pressed")
+  log("boot button pressed")
   configMode = 1
   
 bootButton = machine.Pin(0, machine.Pin.IN, machine.Pin.PULL_UP)
 bootButton.irq(trigger=machine.Pin.IRQ_FALLING, handler=bootButtonCallback)
 
+def syncTime():
+    global syncTimePeriod, lastSyncTime
+    logCurrentTime()
+    if lastSyncTime == 0 or lastSyncTime < time.time() - syncTimePeriod:
+        try:
+            ntptime.settime('ptbtime1.ptb.de')
+        except Exception as e:
+            log(repr(e))
+            raise RainradarException("ERR NTP")
+        log("Synced time with NTP server")
+        lastSyncTime = time.time()
 
+def logCurrentTime():
+    log("Current time: " + formatEmbTime(time.time()) + " UTC")
+
+def formatEmbTime(embTime):
+    return '{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*time.gmtime(embTime))
+
+def setBrightness(disp, brightness, brightnessNight, timeNight):
+    if brightnessNight != None and timeNight != None:
+        curTime = str(time.gmtime()[3]) + ':' + str(time.gmtime()[4])
+        if timeframe.TimeFrame(timeNight).isInFrame(curTime):
+            disp.setBrightness(brightnessNight)
+            return
+    if brightness == None:
+        brightness = 10
+    disp.setBrightness(brightness)
+    
 def updateRainRadarLevels():
     levelList = radar.getLevelList()
-    print("rain radar records:")
+    log("rain radar records:")
     logLevels(levelList)
     disp.showRainLevels(levelList)
     setNextRadarSyncTime()
@@ -34,7 +69,7 @@ def logLevels(levelList):
         logLevel(levelObject)
 
 def logLevel(levelObject):
-    print(levelObject)
+    log(levelObject)
     
 def getRandomInt(base):
     return int(urandom.random() * base)
@@ -44,7 +79,7 @@ def setNextRadarSyncTime():
     nextRadarSyncTime = time.time() + ( 5 * 60 ) + getRandomInt(10)
  
 def showPause():
-    print("Pause for " + str(nextRadarSyncTime - time.time()) + " seconds.")
+    log("Pause for " + str(nextRadarSyncTime - time.time()) + " seconds.")
     while(nextRadarSyncTime > time.time()):
         minutesToWait = math.ceil( (nextRadarSyncTime - time.time()) / 60 )
         disp.showWaitTime(minutesToWait)
@@ -56,21 +91,22 @@ def showPause():
 
 def checkConfigMode():
     global configChanger, configMode
-    #print("Config mode: " + str(configMode))
+    #log("Config mode: " + str(configMode))
     if configMode != 0:
-        print("Starting config changer...")
+        log("Starting config changer...")
         configChanger.startServer()
-        print("Config changer finished.")
+        log("Config changer finished.")
         configMode = 0
         raise RainradarException("CONF EXIT")
     
 def garbageCollector():
     gc.collect()
-    print("Free memory: " + str(gc.mem_free()))
+    log("Free memory: " + str(gc.mem_free()))
     
 # main loop
 while True:
     disp = Display()
+    lastSyncTime = 0
     nextRadarSyncTime = 0
     try:
         cfg = Config()
@@ -78,7 +114,7 @@ while True:
         try:
             cfg.readConfig()
         except RainradarException as exp:
-            print("Exception in readConfig: " + str(exp))
+            log("Exception in readConfig: " + str(exp))
             configMode = 1
         checkConfigMode()
         plz = cfg.getPlz()
@@ -87,6 +123,8 @@ while True:
         wifi.connect(cfg.getSsid(), cfg.getPassword())
         radar = Radar(plz)
         while True:
+            syncTime()
+            setBrightness(disp, cfg.getBrightness, cfg.getBrightnessNight, cfg.getTimeNight)
             checkConfigMode()
             updateRainRadarLevels()
             checkConfigMode()
@@ -95,12 +133,12 @@ while True:
 
     except RainradarException as rexp:
         strExp = str(rexp)
-        print("RainradarException: " + strExp)
+        log("RainradarException: " + strExp)
         disp.showText(strExp, 3)
         garbageCollector()
     except Exception as exp:
         strExp = str(exp)
-        print("Unknown Exception: " + strExp)
+        log("Unknown Exception: " + strExp)
         sys.print_exception(exp)
         while True: # stick on showing unknown exception
             disp.showText(strExp, 3)

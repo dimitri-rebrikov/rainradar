@@ -101,6 +101,18 @@ class ConfigChanger:
     <input type="text" id="plz" name="plz" value="''' + self.config.getPlz() + '''">
     </p>
     <p>
+    <label for="fname">Display Brightness (0-15):</label>
+    <input type="text" id="brightness" name="brightness" value="''' + self.config.getBrightness() + '''">
+    </p>
+    <p>
+    <label for="fname">Display Brightness for Night (optional):</label>
+    <input type="text" id="brightnessNight" name="brightnessNight" value="''' + self.config.getBrightnessNight() + '''">
+    </p>
+    <p>
+    <label for="fname">Night Time, use Greenwich Time (f.e. 20:00-04:00):</label>
+    <input type="text" id="timeNight" name="timeNight" value="''' + self.config.getTimeNight() + '''">
+    </p>
+    <p>
     <input type="submit" value="Save changes">
     </p>
   </form> 
@@ -157,6 +169,15 @@ class ConfigChanger:
                         testConnection = True
                     elif param == 'plz' and value != self.config.getPlz():
                         self.config.setPlz(value)
+                        changed = True
+                    elif param == 'brightness' and value != self.config.getBrightness():
+                        self.config.setBrightness(value)
+                        changed = True
+                    elif param == 'brightnessNight' and value != self.config.getBrightnessNight():
+                        self.config.setBrightnessNight(value)
+                        changed = True
+                    elif param == 'timeNight' and value != self.config.getTimeNight():
+                        self.config.setTimeNight(value)
                         changed = True
                     elif param == 'retest':
                         testConnection = True

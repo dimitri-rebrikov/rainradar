@@ -18,6 +18,9 @@ class Display:
         self.disp.brightness(0)
         self.clean()
 
+    def setBrightness(self, brightness):
+        self.disp.brightness(int(brightness))
+
     def showRainLevels(self, levelList):
         print("showLevels: start: " + str(start_x) + ", max: " + str(max_x) + ", levels: "+ repr(levelList))
         if self.needClean:
