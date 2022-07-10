@@ -38,19 +38,20 @@ class Config:
             return json.dump(self.config, fp)
         
     def getSsid(self):
-        return self.config['ssid']
+        return self.config.get('ssid')
+        
     
     def setSsid(self, ssid):
         self.config['ssid'] = ssid
     
     def getPassword(self):
-        return self.config['password']
+        return self.config.get('password')
     
     def setPassword(self, password):
         self.config['password'] = password
     
     def getPlz(self):
-        return self.config['plz']
+        return self.config.get('plz')
     
     def setPlz(self, plz):
         self.config['plz'] = plz
@@ -59,16 +60,16 @@ class Config:
         self.config['brightness'] = brightness
 
     def getBrightness(self):
-        return self.config['brightness']
+        return self.config.get('brightness')
 
     def setBrightnessNight(self, brightnessNight):
         self.config['brightnessNight'] = brightnessNight
 
     def getBrightnessNight(self):
-        return self.config['brightnessNight']
+        return self.config.get('brightnessNight')
 
     def setTimeNight(self, timeNight):
         self.config['timeNight'] = timeNight
 
     def getTimeNight(self):
-        return self.config['timeNight']
+        return self.config.get('timeNight')

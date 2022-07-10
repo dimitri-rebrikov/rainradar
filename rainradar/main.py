@@ -18,8 +18,7 @@ syncTimePeriod = 60*60 # 1 hour
 configMode = 0
 
 def log(text):
-    logCurrentTime()
-    print(text)
+    print(getCurrentTime() + ": " + text)
 
 def bootButtonCallback(pin):
   global configMode
@@ -31,31 +30,37 @@ bootButton.irq(trigger=machine.Pin.IRQ_FALLING, handler=bootButtonCallback)
 
 def syncTime():
     global syncTimePeriod, lastSyncTime
-    logCurrentTime()
     if lastSyncTime == 0 or lastSyncTime < time.time() - syncTimePeriod:
+        log("Syncing time...")
         try:
-            ntptime.settime('ptbtime1.ptb.de')
+            ntptime.settime()
         except Exception as e:
             log(repr(e))
             raise RainradarException("ERR NTP")
         log("Synced time with NTP server")
         lastSyncTime = time.time()
 
-def logCurrentTime():
-    log("Current time: " + formatEmbTime(time.time()) + " UTC")
+def getCurrentTime():
+    return formatEmbTime(time.time()) + " UTC"
 
 def formatEmbTime(embTime):
     return '{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*time.gmtime(embTime))
 
 def setBrightness(disp, brightness, brightnessNight, timeNight):
-    if brightnessNight != None and timeNight != None:
-        curTime = str(time.gmtime()[3]) + ':' + str(time.gmtime()[4])
-        if timeframe.TimeFrame(timeNight).isInFrame(curTime):
-            disp.setBrightness(brightnessNight)
-            return
-    if brightness == None:
-        brightness = 10
-    disp.setBrightness(brightness)
+    try:
+        if brightnessNight != None and timeNight != None:
+            curTime = str(time.gmtime()[3]) + ':' + str(time.gmtime()[4])
+            if timeframe.TimeFrame(timeNight).isInFrame(curTime):
+                log("set night time brightness: " + str(brightnessNight))
+                disp.setBrightness(brightnessNight)
+                return
+        if brightness == None:
+            brightness = 10
+        log("set daytime brightness: " + brightness)
+        disp.setBrightness(brightness)
+    except Exception as exp:
+        log("setBrightness Exception: " + str(exp))
+        sys.print_exception(exp)
     
 def updateRainRadarLevels():
     levelList = radar.getLevelList()
@@ -65,12 +70,8 @@ def updateRainRadarLevels():
     setNextRadarSyncTime()
     
 def logLevels(levelList):
-    for levelObject in levelList:
-        logLevel(levelObject)
+    log(",".join(levelList))
 
-def logLevel(levelObject):
-    log(levelObject)
-    
 def getRandomInt(base):
     return int(urandom.random() * base)
     
@@ -124,7 +125,7 @@ while True:
         radar = Radar(plz)
         while True:
             syncTime()
-            setBrightness(disp, cfg.getBrightness, cfg.getBrightnessNight, cfg.getTimeNight)
+            setBrightness(disp, cfg.getBrightness(), cfg.getBrightnessNight(), cfg.getTimeNight())
             checkConfigMode()
             updateRainRadarLevels()
             checkConfigMode()
