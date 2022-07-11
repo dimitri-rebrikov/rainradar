@@ -11,7 +11,7 @@ import machine
 import urandom
 import gc
 import sys
-import timeframe
+from timeframe import TimeFrame
 
 syncTimePeriod = 60*60 # 1 hour
 
@@ -47,20 +47,16 @@ def formatEmbTime(embTime):
     return '{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*time.gmtime(embTime))
 
 def setBrightness(disp, brightness, brightnessNight, timeNight):
-    try:
-        if brightnessNight != None and timeNight != None:
-            curTime = str(time.gmtime()[3]) + ':' + str(time.gmtime()[4])
-            if timeframe.TimeFrame(timeNight).isInFrame(curTime):
-                log("set night time brightness: " + str(brightnessNight))
-                disp.setBrightness(brightnessNight)
-                return
-        if brightness == None:
-            brightness = 10
-        log("set daytime brightness: " + brightness)
-        disp.setBrightness(brightness)
-    except Exception as exp:
-        log("setBrightness Exception: " + str(exp))
-        sys.print_exception(exp)
+    if brightnessNight != None and timeNight != None:
+        curTime = str(time.gmtime()[3]) + ':' + str(time.gmtime()[4])
+        if TimeFrame(timeNight).isInFrame(curTime):
+            log("set night time brightness: " + str(brightnessNight))
+            disp.setBrightness(brightnessNight)
+            return
+    if brightness == None:
+        brightness = 10
+    log("set daytime brightness: " + brightness)
+    disp.setBrightness(brightness)
     
 def updateRainRadarLevels():
     levelList = radar.getLevelList()
@@ -141,6 +137,9 @@ while True:
         strExp = str(exp)
         log("Unknown Exception: " + strExp)
         sys.print_exception(exp)
+        with open("error.log", "w") as errorlog:
+            print(getCurrentTime(), file=errorlog)
+            sys.print_exception(exp, errorlog)
         while True: # stick on showing unknown exception
             disp.showText(strExp, 3)
             garbageCollector()
