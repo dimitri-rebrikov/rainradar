@@ -16,6 +16,7 @@ class Display:
         ss = Pin(5, Pin.OUT) 
         self.disp = max7219.Matrix8x8(spi, ss, 4)
         self.clean()
+        self.setBrightness(0)
 
     def setBrightness(self, brightness):
         self.disp.brightness(int(brightness))
@@ -31,7 +32,12 @@ class Display:
         for i in range(min(len(levelList), max_x - start_x + 1)):
             level = levelList[i]
             for j in range(min(len(level), max_y)):
-                self.disp.pixel(i, max_y - 1 - j, int(level[j:j+1]))
+                try:
+                    self.disp.pixel(i, max_y - 1 - j, int(level[j:j+1]))
+                except Exception as exp:
+                    with open("level.log", "w") as levellog:
+                        print("showLevels: i: " + str(i) + ", j: " + str(j) + ", levels: ["+ repr(levelList) +"]", file=levellog)
+                    raise
 
         self.disp.show()
         

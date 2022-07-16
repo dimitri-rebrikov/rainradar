@@ -10,6 +10,8 @@ class Radar:
     def getLevelList(self):
         try:
             r = requests.get(self.url)
+            if r.status_code != 200:
+                raise RainradarException("ERR GET RADAR " + str(r.status_code))
             try:
                 records = r.json()
             except Exception as e:
