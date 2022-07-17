@@ -44,6 +44,7 @@ def startAccessPoint():
     ap_if.config(essid="rainradar", password="rainradar2021", authmode=3)
     while not ap_if.active():
         pass
+    return ap_if.ifconfig()[0] # ip adress
     
 def stopAccessPoint():
     print('stop access point')

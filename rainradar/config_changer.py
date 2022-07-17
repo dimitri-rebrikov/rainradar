@@ -4,6 +4,7 @@ import time
 import re
 import gc
 from unquote import unquote_plus
+from dnsquery import DNSQuery
 gc.collect()
 
 
@@ -197,15 +198,35 @@ class ConfigChanger:
 
     def startServer(self):
         self.display.showText("CONF")
-        wifi.startAccessPoint()
+        ip = wifi.startAccessPoint()
         self.__testWifiConnection()
+        
+        # dns server
+        udps = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        udps.setblocking(False)
+        udps.bind(('',53))
+        
+        # web server
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(('', 80))
         s.listen(1)
+        s.setblocking(False)
 
         while not self.finished:
+            # DNS Loop
             try:
+                data, addr = udps.recvfrom(1024)
+                print("incomming dns datagram...")
+                p=DNSQuery(data)
+                udps.sendto(p.respuesta(ip), addr)
+                print('Replying: {:s} -> {:s}'.format(p.dominio, ip))
+            except OSError as e:
+                pass
+            
+            # web loop
+            try:
+                conn = None
                 conn, addr = s.accept()
                 conn.settimeout(3.0)
                 print('Got a connection from %s' % str(addr))
@@ -221,7 +242,7 @@ class ConfigChanger:
                     conn.sendall(self.__getResponse().encode())
                 conn.close()
             except OSError as e:
-                conn.close()
-                print('Connection closed')
+                if conn:
+                    conn.close()
                 
         wifi.stopAccessPoint()
