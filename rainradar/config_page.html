@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <style>
+      table, th, td {{
+      border: 1px solid black;
+      border-collapse: collapse;
+      }}
+   </style>
+</head>
+
+<body>
+
+   <h1>Rainradar Configuration Page</h1>
+
+   <h2>WiFi Status</h2>
+
+   <p>WiFi: {connectionStatus}
+   </p>
+
+   <p>
+   <form action="/">
+      <input type="hidden" id="retest" name="retest" value="">
+      <input type="submit" value="Retest WiFi Connection">
+   </form>
+   </p>
+
+   <h2>Change Parameters</h2>
+   <p>
+   <form action="/">
+      <table>
+         <tr>
+            <td><label for="fname">WiFi Name (SSID):</label></td>
+            <td><input type="text" id="ssid" name="ssid" value="{ssid}"></td>
+         </tr>
+         <tr>
+            <td><label for="fname">WiFi Password:</label></td>
+            <td><input type="text" id="password" name="password" value="{password}"></td>
+         </tr>
+         <tr>
+            <td><label for="fname">Postal Index:</label></td>
+            <td><input type="text" id="plz" name="plz" value="{plz}"></td>
+         </tr>
+         <tr>
+            <td><label for="fname">Display Brightness 
+               <br> possible values: 0..15:</label></td>
+            <td><input type="text" id="brightness" name="brightness" value="{brightness}"></td>
+         </tr>
+         <tr>
+            <td><label for="fname">Night Display Brightness
+               <br>optional</label></td>
+            <td><input type="text" id="brightnessNight" name="brightnessNight" value="{brightnessNight}"></td>
+         </tr>
+         <tr>
+            <td><label for="fname">Night Time 
+                  <br>optional
+                  <br>example: 20:00-04:00
+                  <br>use Greenwich Time</label></td>
+            <td><input type="text" id="timeNight" name="timeNight" value="{timeNight}"></td>
+         </tr>
+      </table>
+      <p>
+         <input type="submit" value="Save changes">
+      </p>
+   </form>
+   </p>
+
+   <h2>Available WiFi's</h2>
+   <p>
+      {wifiList}
+   </p>
+
+   <p>
+   <form action="/">
+      <input type="submit" value="Refresh">
+   </form>
+   </p>
+
+   <h2>End</h2>
+
+   <p>
+   <form action="/">
+      <input type="hidden" id="finish" name="finish" value="">
+      <input type="submit" value="Exit Config">
+   </form>
+   </p>
+
+</body>
+
+</html>

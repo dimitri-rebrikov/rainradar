@@ -66,83 +66,21 @@ class ConfigChanger:
       '''
 
     def __getConfigPage(self):
-        html = '''
-  <!DOCTYPE html>
-  <html>
-  <body>
-
-  <h1>Rainradar Configuration Page</h1>
-
-  <h2>WiFi Status</h2>
-
-  <p>WiFi: ''' + {True: '<span style="color:green;">Connected</span>',
-               False: '<span style="color:red;">Not connected</span>'}[self.connectionSuccessful] + '''
-  </p>
-
-  <p>
-  <form action="/">
-     <input type="hidden" id="retest" name="retest" value="">
-     <input type="submit" value="Retest WiFi Connection">
-  </form>
-  </p>
-  
-  <h2>Change Parameters</h2>
-  <p>
-  <form action="/">
-    <p>
-    <label for="fname">WiFi Name (SSID):</label>
-    <input type="text" id="ssid" name="ssid" value="''' + self.config.getSsid() + '''">
-    </p>
-    <p>
-    <label for="fname">WiFi Password:</label>
-    <input type="text" id="password" name="password" value="''' + self.config.getPassword() + '''">
-    </p>
-    <p>
-    <label for="fname">Postal Index:</label>
-    <input type="text" id="plz" name="plz" value="''' + self.config.getPlz() + '''">
-    </p>
-    <p>
-    <label for="fname">Display Brightness (0-15):</label>
-    <input type="text" id="brightness" name="brightness" value="''' + self.config.getBrightness() + '''">
-    </p>
-    <p>
-    <label for="fname">Display Brightness for Night (optional):</label>
-    <input type="text" id="brightnessNight" name="brightnessNight" value="''' + self.config.getBrightnessNight() + '''">
-    </p>
-    <p>
-    <label for="fname">Night Time, use Greenwich Time (f.e. 20:00-04:00):</label>
-    <input type="text" id="timeNight" name="timeNight" value="''' + self.config.getTimeNight() + '''">
-    </p>
-    <p>
-    <input type="submit" value="Save changes">
-    </p>
-  </form> 
-  </p>
-  
-  <h2>Available WiFi's</h2>
-  <p>
-  ''' + '<br>'.join(wifi.listNetworks()) + '''
-  </p>
-  
-  <p>
-  <form action="/">
-     <input type="submit" value="Refresh">
-  </form>
-  </p>
-
-  <h2>End</h2>
-
-  <p>
-  <form action="/">
-     <input type="hidden" id="finish" name="finish" value="">
-     <input type="submit" value="Exit Config">
-  </form>
-  </p>
-
-  </body>
-  </html>
-    '''
-        return html
+        with open("config_page.html") as config_page_file:
+            config_page = config_page_file.read()
+            config_page = re.sub('^\s*\{\s*$','{{', config_page)
+            config_page = re.sub('^\s*\}\s*$','}}', config_page)
+            return config_page.format(\
+                connectionStatus={True: '<span style="color:green;">Connected</span>',\
+                    False: '<span style="color:red;">Not connected</span>'}[self.connectionSuccessful],\
+                ssid=self.config.getSsid(),\
+                password=self.config.getPassword(),\
+                plz=self.config.getPlz(),\
+                brightness=self.config.getBrightness(),\
+                brightnessNight=self.config.getBrightnessNight(),\
+                timeNight=self.config.getTimeNight(),\
+                wifiList='<br>'.join(wifi.listNetworks())\
+            )
 
     def __updateConfigFromRequest(self, request):
         containsQueryParameters = False
