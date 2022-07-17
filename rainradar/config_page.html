@@ -3,10 +3,6 @@
 
 <head>
    <style>
-      table, th, td {{
-      border: 1px solid black;
-      border-collapse: collapse;
-      }}
    </style>
 </head>
 
@@ -29,7 +25,7 @@
    <h2>Change Parameters</h2>
    <p>
    <form action="/">
-      <table>
+      <table cellpadding="10">
          <tr>
             <td><label for="fname">WiFi Name (SSID):</label></td>
             <td><input type="text" id="ssid" name="ssid" value="{ssid}"></td>
@@ -74,6 +70,16 @@
    <p>
    <form action="/">
       <input type="submit" value="Refresh">
+   </form>
+   </p>
+
+
+   <h2>Test display brightness</h2>
+   <p>Use this to find the convenient brightness level</p>
+   <p>
+   <form action="/">
+      <input type="text" id="testBrightness" name="testBrightness" value="{testBrightness}">
+      <input type="submit" value="Test Brightness">
    </form>
    </p>
 

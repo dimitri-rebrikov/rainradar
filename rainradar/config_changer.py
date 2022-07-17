@@ -18,6 +18,7 @@ class ConfigChanger:
         self.waitForConnection = 0
         self.finished = False
         self.connectionSuccessful = False
+        self.testBrightness=15
 
     def __getResponse(self):
         if self.finished:
@@ -79,6 +80,7 @@ class ConfigChanger:
                 brightness=self.config.getBrightness(),\
                 brightnessNight=self.config.getBrightnessNight(),\
                 timeNight=self.config.getTimeNight(),\
+                testBrightness=self.testBrightness,\
                 wifiList='<br>'.join(wifi.listNetworks())\
             )
 
@@ -120,6 +122,9 @@ class ConfigChanger:
                         changed = True
                     elif param == 'retest':
                         testConnection = True
+                    elif param == 'testBrightness':
+                        self.testBrightness = value
+                        self.display.setBrightness(value)
                     elif param == 'finish':
                         self.finished = True
             if changed:
