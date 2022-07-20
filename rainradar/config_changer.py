@@ -3,6 +3,7 @@ import usocket as socket
 import time
 import re
 import gc
+import io
 from unquote import unquote_plus
 from dnsquery import DNSQuery
 gc.collect()
@@ -19,6 +20,8 @@ class ConfigChanger:
         self.finished = False
         self.connectionSuccessful = False
         self.testBrightness=15
+        self.reg1=re.compile('^(.*){([^}]*)$')
+        self.reg2=re.compile('^([^{]*)}(.*)$')
 
     def __getResponse(self):
         if self.finished:
@@ -68,10 +71,14 @@ class ConfigChanger:
 
     def __getConfigPage(self):
         with open("config_page.html") as config_page_file:
-            config_page = config_page_file.read()
-            config_page = re.sub('^\s*\{\s*$','{{', config_page)
-            config_page = re.sub('^\s*\}\s*$','}}', config_page)
-            return config_page.format(\
+            config_page = io.StringIO("")
+            for config_line in config_page_file:
+                # protect non-placeholders
+                config_line = self.reg1.sub(r'\1{{\2', config_line) 
+                config_line = self.reg2.sub(r'\1}}\2', config_line)
+                config_page.write(config_line)
+            config_page.seek(0)
+            return config_page.read().format(\
                 connectionStatus={True: '<span style="color:green;">Connected</span>',\
                     False: '<span style="color:red;">Not connected</span>'}[self.connectionSuccessful],\
                 ssid=self.config.getSsid(),\
