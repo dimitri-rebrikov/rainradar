@@ -1,7 +1,12 @@
 import csv
 import io
-from dwd_utils import mosmix, plz, radolan
+from dwd_utils import plz, radolan
+from datetime import datetime
 
+def radolanRvTimeStamp():
+    return datetime.strptime(radolan.RadolanProducts.getLatestRvDataTimestamp(), 
+        #Fri, 27 Mar 2015 08:05:42 GMT
+        '%a, %d %b %Y %X %Z')
 
 def radolanRvDataStream():
     plzToCoordMap = {k : (plz.plzMap[k]['lat'], plz.plzMap[k]['lon'] ) for k in plz.plzMap.keys() }
@@ -53,6 +58,7 @@ def levelToMatrix(level):
 
 
 if __name__ == "__main__":
+    print(radolanRvTimeStamp().isoformat())
     with radolanRvDataStream() as file:
        for row in csv.reader(file):
            if row[0] == '24944':
