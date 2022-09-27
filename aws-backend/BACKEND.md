@@ -1,5 +1,5 @@
 # setup
-Theoretically you don't need you own backend as the frontend device will use my instance of the backend.
+Theoretically you don't need your own backend as the frontend device will use my instance of the backend by default.
 
 But for the case you want to have and use your own instance, here is the short description:
 (to do this you need to have basic knowledge about Amazon Web Services)
