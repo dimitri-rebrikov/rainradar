@@ -7,21 +7,28 @@ and the intensity of the rain for the 6 hours (following the 2 hours) with 1 hou
 ![picture](doc/rainradar.jpg)
 
 # common
-The Rain Radar is a combination of:
+The Rain Radar consist of:
+
+Frontend Device:
 - an ESP32 micro controller
 - a chain of four MAX7219 8x8 LED matrices
-- an online service providing the weather forecast by German postal index, https://morgenwirdes.de/api/
+- source code implemented in MycroPython accessing to the backend and visualising the rain forecast data on the matrix
+
+Backend/Online Services:
+- AWS Lambda collecting rain radar data (Radolan RV) from the DWD (German Federal Weather Service) for all Gemran postal indexes (PLZ's)
+- AWA Lambda collecting rain forecast data (Mosmix) from the DWD for all German postal indexes
+- AWD Lambda providing rain radar and rain forecast data on a HTTP GET request with a German postal index as query parameter
 
 The project is inspired by the project from the German Make Magazine https://github.com/MakeMagazinDE/LED-Laufschrift
 
-# manual
+# user manual for the device
 
 See [User Manual](doc/manual/MANUAL.md)
 
-# assembly
+# assembly of the device
 
 See [Assembly](doc/assembly/ASSEMBLY.md)
-# setup
+# setup of the device
 
 - install Silicon Labs CP210x VCP driver from silabs.com so your PC can communicate with the ESP32 
 - install Python 3.x as the software used below depends on it
@@ -43,3 +50,6 @@ See [Assembly](doc/assembly/ASSEMBLY.md)
   - `ampy --port COM4 ls`
 - restart ESP32 by disconnecting/connecting the power supply (i.e. USB)
 
+# backend
+
+See [Backend](aws-backend/BACKEND.md)
