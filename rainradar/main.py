@@ -73,7 +73,7 @@ def getRandomInt(base):
     
 def setNextRadarSyncTime():
     global nextRadarSyncTime
-    nextRadarSyncTime = time.time() + ( 5 * 60 ) + getRandomInt(10)
+    nextRadarSyncTime = time.time() + ( 2 * 60 ) + getRandomInt(10)
  
 def showPause():
     log("Pause for " + str(nextRadarSyncTime - time.time()) + " seconds.")
