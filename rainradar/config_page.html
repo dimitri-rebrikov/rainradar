@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <style>
+      .parameter {
+         display: table-row;
+      }
+
+      .parameter label {
+         display: table-cell;
+         padding-bottom: 15px;
+         padding-right: 15px;
+      }
+
+      .parameter input {
+         display: table-cell;
+      }
+   </style>
+</head>
+
+<body>
+
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <h1>Rainradar Configuration Page</h1>
+
+   <h2>WiFi Status</h2>
+
+   <p>WiFi: {connectionStatus}</p>
+
+
+   <form action="/">
+      <input type="hidden" id="retest" name="retest" value="">
+      <input type="submit" value="Retest WiFi Connection">
+   </form>
+
+   <h2>Change Parameters</h2>
+
+   <form action="/">
+
+      <div class="parameter">
+         <label for="fname">WiFi Name (SSID):</label>
+         <input type="text" id="ssid" name="ssid" value="{ssid}">
+      </div>
+
+      <div class="parameter">
+         <label for="fname">WiFi Password:</label>
+         <input type="text" id="password" name="password" value="{password}">
+      </div>
+
+      <div class="parameter">
+         <label for="fname">Postal Index:</label>
+         <input type="text" id="plz" name="plz" value="{plz}">
+      </div>
+      
+      <div class="parameter">
+         <label for="fname">Display Brightness:<br>possible values: 0..15:</label>
+         <input type="text" id="brightness" name="brightness" value="{brightness}">
+      </div>
+
+      <div class="parameter">
+         <label for="fname">Night Display Brightness:<br> optional:</label>
+         <input type="text" id="brightnessNight" name="brightnessNight" value="{brightnessNight}">
+      </div>
+
+      <div class="parameter">
+         <label for="fname">Night Time:<br>optional<br>example: 20:00-04:00<br> use Greenwich Time</label>
+         <input type="text" id="timeNight" name="timeNight" value="{timeNight}">
+      </div>
+
+      <input type="submit" value="Save changes">
+
+   </form>
+
+   <h2>Available WiFi's</h2>
+   <p>{wifiList}</p>
+
+
+   <form action="/">
+      <input type="submit" value="Refresh">
+   </form>
+
+
+
+   <h2>Test display brightness</h2>
+   <p>Use this to find the convenient brightness level</p>
+
+   <form action="/">
+      <input type="text" id="testBrightness" name="testBrightness" value="{testBrightness}">
+      <input type="submit" value="Test Brightness">
+   </form>
+
+
+   <h2>End</h2>
+
+   <form action="/">
+      <input type="hidden" id="finish" name="finish" value="">
+      <input type="submit" value="Exit Config">
+   </form>
+
+</body>
+
+</html>

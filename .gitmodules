@@ -1,0 +1,7 @@
+[submodule "aws-backend/rainradar_rv_update/dwd_utils"]
+	path = aws-backend/rainradar_rv_update/dwd_utils
+	url = https://github.com/dimitri-rebrikov/dwd_utils.git
+	
+[submodule "aws-backend/rainradar_mosmix_update/dwd_utils"]
+	path = aws-backend/rainradar_mosmix_update/dwd_utils
+	url = https://github.com/dimitri-rebrikov/dwd_utils.git

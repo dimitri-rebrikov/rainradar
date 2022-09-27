@@ -3,7 +3,9 @@ import usocket as socket
 import time
 import re
 import gc
+import io
 from unquote import unquote_plus
+from dnsquery import DNSQuery
 gc.collect()
 
 
@@ -17,6 +19,9 @@ class ConfigChanger:
         self.waitForConnection = 0
         self.finished = False
         self.connectionSuccessful = False
+        self.testBrightness=15
+        self.reg1=re.compile('^(.*){([^}]*)$')
+        self.reg2=re.compile('^([^{]*)}(.*)$')
 
     def __getResponse(self):
         if self.finished:
@@ -65,71 +70,26 @@ class ConfigChanger:
       '''
 
     def __getConfigPage(self):
-        html = '''
-  <!DOCTYPE html>
-  <html>
-  <body>
-
-  <h1>Rainradar Configuration Page</h1>
-
-  <h2>WiFi Status</h2>
-
-  <p>WiFi: ''' + {True: '<span style="color:green;">Connected</span>',
-               False: '<span style="color:red;">Not connected</span>'}[self.connectionSuccessful] + '''
-  </p>
-
-  <p>
-  <form action="/">
-     <input type="hidden" id="retest" name="retest" value="">
-     <input type="submit" value="Retest WiFi Connection">
-  </form>
-  </p>
-  
-  <h2>Change Parameters</h2>
-  <p>
-  <form action="/">
-    <p>
-    <label for="fname">WiFi Name (SSID):</label>
-    <input type="text" id="ssid" name="ssid" value="''' + self.config.getSsid() + '''">
-    </p>
-    <p>
-    <label for="fname">WiFi Password:</label>
-    <input type="text" id="password" name="password" value="''' + self.config.getPassword() + '''">
-    </p>
-    <p>
-    <label for="fname">Postal Index:</label>
-    <input type="text" id="plz" name="plz" value="''' + self.config.getPlz() + '''">
-    </p>
-    <p>
-    <input type="submit" value="Save changes">
-    </p>
-  </form> 
-  </p>
-  
-  <h2>Available WiFi's</h2>
-  <p>
-  ''' + '<br>'.join(wifi.listNetworks()) + '''
-  </p>
-  
-  <p>
-  <form action="/">
-     <input type="submit" value="Refresh">
-  </form>
-  </p>
-
-  <h2>End</h2>
-
-  <p>
-  <form action="/">
-     <input type="hidden" id="finish" name="finish" value="">
-     <input type="submit" value="Exit Config">
-  </form>
-  </p>
-
-  </body>
-  </html>
-    '''
-        return html
+        with open("config_page.html") as config_page_file:
+            config_page = io.StringIO("")
+            for config_line in config_page_file:
+                # protect non-placeholders
+                config_line = self.reg1.sub(r'\1{{\2', config_line) 
+                config_line = self.reg2.sub(r'\1}}\2', config_line)
+                config_page.write(config_line)
+            config_page.seek(0)
+            return config_page.read().format(\
+                connectionStatus={True: '<span style="color:green;">Connected</span>',\
+                    False: '<span style="color:red;">Not connected</span>'}[self.connectionSuccessful],\
+                ssid=self.config.getSsid(),\
+                password=self.config.getPassword(),\
+                plz=self.config.getPlz(),\
+                brightness=self.config.getBrightness(),\
+                brightnessNight=self.config.getBrightnessNight(),\
+                timeNight=self.config.getTimeNight(),\
+                testBrightness=self.testBrightness,\
+                wifiList='<br>'.join(wifi.listNetworks())\
+            )
 
     def __updateConfigFromRequest(self, request):
         containsQueryParameters = False
@@ -158,8 +118,20 @@ class ConfigChanger:
                     elif param == 'plz' and value != self.config.getPlz():
                         self.config.setPlz(value)
                         changed = True
+                    elif param == 'brightness' and value != self.config.getBrightness():
+                        self.config.setBrightness(value)
+                        changed = True
+                    elif param == 'brightnessNight' and value != self.config.getBrightnessNight():
+                        self.config.setBrightnessNight(value)
+                        changed = True
+                    elif param == 'timeNight' and value != self.config.getTimeNight():
+                        self.config.setTimeNight(value)
+                        changed = True
                     elif param == 'retest':
                         testConnection = True
+                    elif param == 'testBrightness':
+                        self.testBrightness = value
+                        self.display.setBrightness(value)
                     elif param == 'finish':
                         self.finished = True
             if changed:
@@ -176,15 +148,35 @@ class ConfigChanger:
 
     def startServer(self):
         self.display.showText("CONF")
-        wifi.startAccessPoint()
+        ip = wifi.startAccessPoint()
         self.__testWifiConnection()
+        
+        # dns server
+        udps = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        udps.setblocking(False)
+        udps.bind(('',53))
+        
+        # web server
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind(('', 80))
         s.listen(1)
+        s.setblocking(False)
 
         while not self.finished:
+            # DNS Loop
             try:
+                data, addr = udps.recvfrom(1024)
+                print("incomming dns datagram...")
+                p=DNSQuery(data)
+                udps.sendto(p.respuesta(ip), addr)
+                print('Replying: {:s} -> {:s}'.format(p.dominio, ip))
+            except OSError as e:
+                pass
+            
+            # web loop
+            try:
+                conn = None
                 conn, addr = s.accept()
                 conn.settimeout(3.0)
                 print('Got a connection from %s' % str(addr))
@@ -200,7 +192,7 @@ class ConfigChanger:
                     conn.sendall(self.__getResponse().encode())
                 conn.close()
             except OSError as e:
-                conn.close()
-                print('Connection closed')
+                if conn:
+                    conn.close()
                 
         wifi.stopAccessPoint()

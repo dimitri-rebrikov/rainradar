@@ -6,22 +6,23 @@ from config import Config
 from exception import RainradarException
 import ntptime
 import math
-import rain
-from weather import Weather
 from config_changer import ConfigChanger
 import machine
 import urandom
 import gc
 import sys
+from timeframe import TimeFrame
 
 syncTimePeriod = 60*60 # 1 hour
-embUnixTimeDiff = 946684800 # embedded systems use 01-01-2000 as start of the time in compare to the unix' 01-01-1970
 
 configMode = 0
 
+def log(text):
+    print(getCurrentTime() + ": " + text)
+
 def bootButtonCallback(pin):
   global configMode
-  print("boot button pressed")
+  log("boot button pressed")
   configMode = 1
   
 bootButton = machine.Pin(0, machine.Pin.IN, machine.Pin.PULL_UP)
@@ -29,74 +30,53 @@ bootButton.irq(trigger=machine.Pin.IRQ_FALLING, handler=bootButtonCallback)
 
 def syncTime():
     global syncTimePeriod, lastSyncTime
-    logCurrentTime()
     if lastSyncTime == 0 or lastSyncTime < time.time() - syncTimePeriod:
+        log("Syncing time...")
         try:
             ntptime.settime()
         except Exception as e:
-            print(repr(e))
+            log(repr(e))
             raise RainradarException("ERR NTP")
-        print("Synced time with NTP server")
-        logCurrentTime()
+        log("Synced time with NTP server")
         lastSyncTime = time.time()
-        
-def emb2UnixTime(embTime):
-    return embTime + embUnixTimeDiff
 
-def unix2EmbTime(unixTime):
-    return unixTime - embUnixTimeDiff
+def getCurrentTime():
+    return formatEmbTime(time.time()) + " UTC"
 
-def logCurrentTime():
-    print("Current time: " + formatEmbTime(time.time()) + " UTC")
-    
 def formatEmbTime(embTime):
     return '{:04d}-{:02d}-{:02d} {:02d}:{:02d}:{:02d}'.format(*time.gmtime(embTime))
-        
-def updateRainRadarLevels():
-    mmRecordList = removePastRecords(radar.getMmRecordList(), 0)
-    print("rain radar records:")
-    logLevels(mmRecordList)
-    levelList = rain.mmRecordListToLevelList(mmRecordList)
-    disp.showRainLevels(levelList)
-    setNextRadarSyncTime(mmRecordList)
+
+def setBrightness(disp, brightness, brightnessNight, timeNight):
+    if brightnessNight != None and timeNight != None:
+        curTime = str(time.gmtime()[3]) + ':' + str(time.gmtime()[4])
+        if TimeFrame(timeNight).isInFrame(curTime):
+            log("set night time brightness: " + str(brightnessNight))
+            disp.setBrightness(brightnessNight)
+            return
+    if brightness == None:
+        brightness = 10
+    log("set daytime brightness: " + brightness)
+    disp.setBrightness(brightness)
     
-def updateRainForecastLevels():
-    forecastList = removePastRecords(weather.getRainHourlyForecast(), 60 * 60 * 2)
-    print("rain forecast records:")
-    logLevels(forecastList)
-    levelList = rain.mmRecordListToLevelList(forecastList)
-    disp.showForecastLevels(levelList)
-    setNextForecastSyncTime()
+def updateRainRadarLevels():
+    levelList = radar.getLevelList()
+    log("rain radar records:")
+    logLevels(levelList)
+    disp.showRainLevels(levelList)
+    setNextRadarSyncTime()
     
 def logLevels(levelList):
-    for levelObject in levelList:
-        logLevel(levelObject)
+    log(",".join(levelList))
 
-def logLevel(levelObject):
-    print(formatEmbTime(unix2EmbTime(levelObject['timestamp'])) + " -> " + str(levelObject['mm']))
-
-def removePastRecords(timestampRecordList, addFutureSeconds):
-     #print("unixTime:" + str(unixTime(time.time())))
-     #print("beforFilter: " + repr(timestampRecordList))
-     return list(filter(lambda rec: rec['timestamp'] >= emb2UnixTime(time.time()+ addFutureSeconds), timestampRecordList))
-    
 def getRandomInt(base):
     return int(urandom.random() * base)
     
-def setNextRadarSyncTime(mmRecordList):
+def setNextRadarSyncTime():
     global nextRadarSyncTime
-    if len(mmRecordList) < 1:
-        nextRadarSyncTime = time.time() + ( 5 * 60 ) + getRandomInt(10)
-    else:
-        nextRadarSyncTime = unix2EmbTime(mmRecordList[0]['timestamp']) + 15 + getRandomInt(10)
-        
-def setNextForecastSyncTime():
-    global nextForecastSyncTime
-    nextForecastSyncTime = time.time() + ( 30 * 60 ) + getRandomInt(20)
-    print("nextForecastSyncTime: " + formatEmbTime(nextForecastSyncTime))
-   
+    nextRadarSyncTime = time.time() + ( 2 * 60 ) + getRandomInt(10)
+ 
 def showPause():
-    print("Pause for " + str(nextRadarSyncTime - time.time()) + " seconds.")
+    log("Pause for " + str(nextRadarSyncTime - time.time()) + " seconds.")
     while(nextRadarSyncTime > time.time()):
         minutesToWait = math.ceil( (nextRadarSyncTime - time.time()) / 60 )
         disp.showWaitTime(minutesToWait)
@@ -108,31 +88,30 @@ def showPause():
 
 def checkConfigMode():
     global configChanger, configMode
-    #print("Config mode: " + str(configMode))
+    #log("Config mode: " + str(configMode))
     if configMode != 0:
-        print("Starting config changer...")
+        log("Starting config changer...")
         configChanger.startServer()
-        print("Config changer finished.")
+        log("Config changer finished.")
         configMode = 0
         raise RainradarException("CONF EXIT")
     
 def garbageCollector():
     gc.collect()
-    print("Free memory: " + str(gc.mem_free()))
+    log("Free memory: " + str(gc.mem_free()))
     
 # main loop
 while True:
     disp = Display()
     lastSyncTime = 0
     nextRadarSyncTime = 0
-    nextForecastSyncTime = 0
     try:
         cfg = Config()
         configChanger = ConfigChanger(cfg, disp)
         try:
             cfg.readConfig()
         except RainradarException as exp:
-            print("Exception in readConfig: " + str(exp))
+            log("Exception in readConfig: " + str(exp))
             configMode = 1
         checkConfigMode()
         plz = cfg.getPlz()
@@ -140,26 +119,27 @@ while True:
         checkConfigMode()
         wifi.connect(cfg.getSsid(), cfg.getPassword())
         radar = Radar(plz)
-        weather = Weather(plz)
         while True:
             syncTime()
+            setBrightness(disp, cfg.getBrightness(), cfg.getBrightnessNight(), cfg.getTimeNight())
             checkConfigMode()
             updateRainRadarLevels()
             checkConfigMode()
-            if nextForecastSyncTime <= time.time():
-                updateRainForecastLevels()
             showPause()
             garbageCollector()
 
     except RainradarException as rexp:
         strExp = str(rexp)
-        print("RainradarException: " + strExp)
+        log("RainradarException: " + strExp)
         disp.showText(strExp, 3)
         garbageCollector()
     except Exception as exp:
         strExp = str(exp)
-        print("Unknown Exception: " + strExp)
+        log("Unknown Exception: " + strExp)
         sys.print_exception(exp)
+        with open("error.log", "w") as errorlog:
+            print(getCurrentTime(), file=errorlog)
+            sys.print_exception(exp, errorlog)
         while True: # stick on showing unknown exception
             disp.showText(strExp, 3)
             garbageCollector()
