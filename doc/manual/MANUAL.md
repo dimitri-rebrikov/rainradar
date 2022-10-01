@@ -110,17 +110,17 @@ Now open the address [http://192.168.4.1](http://192.168.4.1) in the Web Browser
 
 #### WIFI Status
 
-The chapter displays the status of the WiFi connection from Rainradar to your WiFi network. The button `Reset WiFi Status` will retest the connection to WiFi and provide the new status.
+The chapter displays the status of the connection from Rainradar to your WiFi network. The button `Reset WiFi Status` will retest the connection to the WiFi and provide the new status.
 
 #### Change Parameters
 
-`WiFi Name (SSID)` the WiFi Name (also called SSID) the Rainradar shall connect to. This shall be probably you home WiFi. The chapter `Available WiFi's` below list all WiFi networks discovered by the Rainradar
+`WiFi Name (SSID)` the name of the WiFi network (also called SSID) the Rainradar shall connect to. This shall be probably your home WiFi. The chapter `Available WiFi's` below lists all WiFi networks discovered by the Rainradar.
 
-`WiFi Password` the password the Rainradar shall use to connect to the WiFi.
+`WiFi Password` the password for the WiFe network above.
 
 `Postal index` the German postal index (so called PLZ) of your location. Rainradar will use this PLZ to get the rain radar and rain forecast data from the server.
 
-`Display Brightness` lets you setup the brightnes of the LEDs. To test the brightness without the saving changes use the `Test Display Brightness` chapter below.
+`Display Brightness` lets you setup the brightnes of the LEDs. To test the brightness without saving and find the value comfortable for you use the `Test Display Brightness` chapter below.
 
 `Night Display Brightness` this optional parameter lets you define the LED brightness for the night time. For this case the night time shall be also defined.
 
@@ -137,6 +137,6 @@ The Rainradar will try to connect to the WiFi and provide the result in the "WiF
 
 **Attention:** there is no check for the right postal index so ensure you provided correct value. Otherwise the rain forecast will be wrong.
 
-After successful configuration you can exit the config mode by hitting of the "Exit Config" button. The Rainradar will stop its Access Point, so the connection to the Rainradar will be lost and your device will probably automatically connect to your home network again.
+After successful configuration you can exit the config mode by hitting of the `Exit Config` button. The Rainradar will stop its Access Point, so the connection to the Rainradar will be lost and your device will probably automatically connect to your home network again.
 
 The Rainradar will switch back into the [Operational Mode](#operational-mode)
