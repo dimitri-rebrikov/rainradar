@@ -106,7 +106,7 @@ Now open the address [http://192.168.4.1](http://192.168.4.1) in the Web Browser
 
 ### Configuration Page 
 
-<img src="config_page.jpg" height="600">
+<img src="config_page.jpg" height="1200">
 
 #### WIFI Status
 
