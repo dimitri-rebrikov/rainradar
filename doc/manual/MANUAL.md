@@ -108,13 +108,25 @@ Now open the address [http://192.168.4.1](http://192.168.4.1) in the Web Browser
 
 <img src="config_page.jpg" height="600">
 
-In the configuration page you shall provide the name and the password of the WiFi network the Rainradar shall use to connect to the internet. It is probably just the WiFi you use for your devices at home. 
+#### WIFI Status
 
-The chapter "Available WiFi's" helps your with the names of the WiFi networks available.
+The chapter displays the status of the WiFi connection from Rainradar to your WiFi network. The button `Reset WiFi Status` will retest the connection to WiFi and provide the new status.
 
-Additionally you shall provide the German postal index (PLZ) of the location the Rainradar shall display the rain forecast for. It is probably just you postal index.
+#### Change Parameters
 
-After your provided these 3 configuration parameters hit the "Save changes" button.
+`WiFi Name (SSID)` the WiFi Name (also called SSID) the Rainradar shall connect to. This shall be probably you home WiFi. The chapter `Available WiFi's` below list all WiFi networks discovered by the Rainradar
+
+`WiFi Password` the password the Rainradar shall use to connect to the WiFi.
+
+`Postal index` the German postal index (so called PLZ) of your location. Rainradar will use this PLZ to get the rain radar and rain forecast data from the server.
+
+`Display Brightness` lets you setup the brightnes of the LEDs. To test the brightness without the saving changes use the `Test Display Brightness` chapter below.
+
+`Night Display Brightness` this optional parameter lets you define the LED brightness for the night time. For this case the night time shall be also defined.
+
+`Nitght Time` hier you can define the time period for the night brightness settings. Format: HH:MM-HH:MM 
+
+After your configured all desired parameters you shall hit the "Save changes" button. 
 
 The Rainradar will try to connect to the WiFi and provide the result in the "WiFi Status" chapter. If the status is "Not connected" the issues might be the following:
 | Issue | Solution |
