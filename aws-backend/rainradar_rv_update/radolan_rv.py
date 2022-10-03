@@ -21,10 +21,10 @@ def radolanRvDataStream():
     f.seek(0)
     return f
 
-def extractForecastsForCoord(latLon, radolanData):
+def extractForecastsForCoord(coord, radolanData):
     return list(map(lambda lev: levelToMatrix(lev),\
         map(lambda mm: mmToLevel(mm) + 1,\
-            map(lambda el: el['values'][latLon],\
+            map(lambda el: el['values'][coord],\
                 radolanData['forecasts'][:24]))))
 
 
