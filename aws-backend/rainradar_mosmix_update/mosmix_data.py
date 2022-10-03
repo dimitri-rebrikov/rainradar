@@ -1,17 +1,17 @@
 import csv
 import io
-from dwd_utils import mosmix, plz
+from dwd_utils import mosmix
+from dwd_utils.poi2MosmixMap import poi2MosmixMap
 
 
 def mosmixDataStream():
-    plzToCoordMap = {k : (plz.plzMap[k]['lat'], plz.plzMap[k]['lon'] ) for k in plz.plzMap.keys() }
-    mosmixData = mosmix.MosmixData().getSationsDataByCoords(set(plzToCoordMap.values()), {'RR1c'}, range(3,9))
+    mosmixData = mosmix.MosmixData().getStationsDataByIds(set(poi2MosmixMap.values()), {'RR1c'}, range(3,9))
     f = io.StringIO()
     csv_writer = csv.writer(f)
-    for k in plzToCoordMap:
+    for k in poi2MosmixMap:
         a = []
         a.append(k)
-        a.extend(extractForecastsForCoord(plzToCoordMap[k], mosmixData))
+        a.extend(extractForecastsForCoord(poi2MosmixMap[k], mosmixData))
         csv_writer.writerow(a)
     f.seek(0)
     return f
