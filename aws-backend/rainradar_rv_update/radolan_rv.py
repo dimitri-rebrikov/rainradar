@@ -1,6 +1,7 @@
 import csv
 import io
-from dwd_utils import plz, radolan
+from dwd_utils import radolan
+from dwd_utils.poi2RadolanRvMap import poi2RadolanRvMap
 from datetime import datetime
 
 def radolanRvTimeStamp():
@@ -9,14 +10,13 @@ def radolanRvTimeStamp():
         '%a, %d %b %Y %X %Z')
 
 def radolanRvDataStream():
-    plzToCoordMap = {k : (plz.plzMap[k]['lat'], plz.plzMap[k]['lon'] ) for k in plz.plzMap.keys() }
-    radolanData = radolan.RadolanProducts.getLatestRvData(set(plzToCoordMap.values()))
+    radolanData = radolan.RadolanProducts.getLatestRvData(set(poi2RadolanRvMap.values()))
     f = io.StringIO()
     csv_writer = csv.writer(f)
-    for k in plzToCoordMap:
+    for k in poi2RadolanRvMap:
         a = []
         a.append(k)
-        a.extend(extractForecastsForCoord(plzToCoordMap[k], radolanData))
+        a.extend(extractForecastsForCoord(poi2RadolanRvMap[k], radolanData))
         csv_writer.writerow(a)
     f.seek(0)
     return f
