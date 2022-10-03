@@ -2,7 +2,12 @@ import csv
 import io
 from dwd_utils import mosmix
 from dwd_utils.poi2MosmixMap import poi2MosmixMap
+from datetime import datetime
 
+def mosmixDataTimeStamp():
+    return datetime.strptime(mosmix.MosmixData().getMosmixDataTimestamp(), 
+        #Fri, 27 Mar 2015 08:05:42 GMT
+        '%a, %d %b %Y %X %Z')
 
 def mosmixDataStream():
     mosmixData = mosmix.MosmixData().getStationsDataByIds(set(poi2MosmixMap.values()), {'RR1c'}, range(3,9))
@@ -53,6 +58,7 @@ def levelToMatrix(level):
 
 
 if __name__ == "__main__":
+    print(mosmixDataTimeStamp())
     with mosmixDataStream() as file:
        for row in csv.reader(file):
            if row[0] == '70599':
