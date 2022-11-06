@@ -10,14 +10,17 @@ def lambda_handler(event, context):
 
     print("Timestamp of the latest radolan RV data:" + str(rvTimestamp))
 
-    lastTimestamp=client.get_object(
-        Bucket='rainradar',
-        Key='rainradar_rv_data'
-    )['LastModified'].replace(tzinfo=None)
+    lastTimestamp=None
+    try:
+        lastTimestamp=client.get_object(
+            Bucket='rainradar',
+            Key='rainradar_rv_data'
+        )['LastModified'].replace(tzinfo=None)
+        print("Timestamp of the tast exectution:" + str(lastTimestamp))
+    except client.exceptions.NoSuchKey:
+        print("No last exectution")
 
-    print("Timestamp of the tast exectution:" + str(lastTimestamp))
-
-    if(rvTimestamp > lastTimestamp):
+    if lastTimestamp is None or rvTimestamp > lastTimestamp:
         print("Execute radolan data creation")
         with radolan_rv.radolanRvDataStream() as file:
             client.put_object( 
