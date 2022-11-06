@@ -10,7 +10,7 @@ def mosmixDataTimeStamp():
         '%a, %d %b %Y %X %Z')
 
 def mosmixDataStream():
-    mosmixData = mosmix.MosmixData().getStationsDataByIds(set(poi2MosmixMap.values()), {'RR1c'}, range(3,9))
+    mosmixData = mosmix.MosmixData().getStationsDataByIds(set(poi2MosmixMap.values()), {'ww'}, range(3,9))
     f = io.StringIO()
     csv_writer = csv.writer(f)
     for k in poi2MosmixMap:
@@ -24,29 +24,49 @@ def mosmixDataStream():
 
 def extractForecastsForCoord(latLon, mosmixData):
     return list(map(lambda lev: levelToMatrix(lev),
-                    map(lambda mm: mmToLevel(float(mm)) + 1,
-                        map(lambda forecast: forecast['values']['RR1c'],
+                    map(lambda ww: wwToLevel(int(float(ww))) + 1,
+                        map(lambda forecast: forecast['values']['ww'],
                             mosmixData[latLon]['forecasts'],
                             ))))
 
+# see https://www.dwd.de/DE/leistungen/opendata/help/schluessel_datenformate/kml/mosmix_element_weather_xls.xlsx
+wwToLevelMap = {
+    95:3,
+    57:5,
+    56:2,
+    67:5,
+    66:2,
+    86:5,
+    85:2,
+    84:5,
+    83:2,
+    82:6,
+    81:5,
+    80:2,
+    75:6,
+    73:4,
+    71:2,
+    69:5,
+    68:2,
+    55:6,
+    53:4,
+    51:2,
+    65:6,
+    63:4,
+    61:2,
+    49:0,
+    45:0,
+    3:0,
+    2:0,
+    1:0,
+    0:0
+}
 
-def mmToLevel(mm):
-    if(mm < 0.1):
-        return 0 # no rain
-    elif(mm < 1.2):
-        return 1 # very light rain
-    elif(mm < 2.5):
-        return 2 # light rain
-    elif(mm < 5.5):
-        return 3 # light to moderate rain
-    elif(mm < 10):
-        return 4 # moderate rain
-    elif(mm < 25):
-        return 5 # moderate to heavy rain
-    elif(mm < 50):
-        return 6 # heavy rain
+def wwToLevel(ww):
+    if ww in wwToLevelMap:
+        return wwToLevelMap[ww]
     else:
-        return 7 # very heavy rain
+        return 0
 
 
 def levelToMatrix(level):
@@ -63,7 +83,4 @@ if __name__ == "__main__":
        for row in csv.reader(file):
            if row[0] == '70599':
                print(row)
-
-
-    
 
