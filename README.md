@@ -38,7 +38,7 @@ See [Assembly](doc/assembly/ASSEMBLY.md)
   - `esptool.py  write_flash -z 0x1000  ~/Downloads/esp32/micropython/esp32-20210902-v1.17.bin` (assuming you downloaded the image into %HOMEPATH%/Downloads/esp32/micropython)
 - install the tool to copy the files to ESP32
   - `pip3 install adafruit-ampy`
-  - `ampy --port COM4 ls`
+  - `ampy --port COM4 ls` (Change COM4 to the port number valid on your PC. Look into the device manager for this. If ampy hangs try to add the delay paramter to the command, i.e. `ampy --port COM4 -d 1 ls`)
 - download the `max7219.py` module from  https://github.com/mcauser/micropython-max7219
 - upload the max7219 module to the ESP32
   - `ampy --port COM4 mkdir lib`
