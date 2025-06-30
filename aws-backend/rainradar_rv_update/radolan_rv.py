@@ -1,25 +1,32 @@
 import csv
 import io
-from dwd_utils import radolan
-from dwd_utils.poi2RadolanRvMap import poi2RadolanRvMap
+from dwd_utils import radolan_hdf5
+from dwd_utils.poi2RadolanHdf5RvMap import poi2RadolanHdf5RvMap
 from datetime import datetime
 
 def radolanRvTimeStamp():
-    return datetime.strptime(radolan.RadolanProducts.getLatestRvDataTimestamp(), 
+    return datetime.strptime(radolan_hdf5.RadolanHdf5Products.getLatestRvDataTimestamp(), 
         #Fri, 27 Mar 2015 08:05:42 GMT
         '%a, %d %b %Y %X %Z')
 
 def radolanRvDataStream():
-    radolanData = radolan.RadolanProducts.getLatestRvData(set(poi2RadolanRvMap.values()))
+    radolanData = radolan_hdf5.RadolanHdf5Products.getLatestRvData(set(convertXyToXyXy(poi2RadolanHdf5RvMap.values())))
     f = io.StringIO()
     csv_writer = csv.writer(f)
-    for k in poi2RadolanRvMap:
+    for k in poi2RadolanHdf5RvMap:
         a = []
         a.append(k)
-        a.extend(extractForecastsForCoord(poi2RadolanRvMap[k], radolanData))
+        a.extend(extractForecastsForCoord(poi2RadolanHdf5RvMap[k], radolanData))
         csv_writer.writerow(a)
     f.seek(0)
     return f
+
+def convertXyToXyXy(xyList):
+    xyxyList = []
+    for xy in xyList:
+        xyxyList.append((xy[0], xy[1], xy[0], xy[1]))
+    return xyxyList
+
 
 def extractForecastsForCoord(coord, radolanData):
     return list(map(lambda lev: levelToMatrix(lev),\
